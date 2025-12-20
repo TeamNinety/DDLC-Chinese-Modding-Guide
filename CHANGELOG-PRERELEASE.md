@@ -3,4 +3,4 @@
 
 2025/12/20
 
-Change the style which is more modern and pretty.
+Changed background and logo.
