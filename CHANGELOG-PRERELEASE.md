@@ -8,3 +8,5 @@ Changed the style which is more modern.(Why I kept spelling words incorrectly...
 Changed background and logo.
 
 Corrected some half-width commas in the text, which should be full-width commas. (I don't know why they're half-width commas, so wired.)
+
+Updated to the upstream version.
