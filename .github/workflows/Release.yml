@@ -14,12 +14,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Get Newest PDF
         run: wget "https://github.com/DanilJeston/DDLC-Chinese-Modding-Guide/raw/master/Main.pdf" -O "Main.pdf"
-      - name: Get Newest Exercise Book PDF
-        run: wget "https://github.com/DanilJeston/DDLC-Chinese-Modding-Guide/raw/master/Exercises.pdf" -O "Exercises.pdf"
       - name: Release
         uses: softprops/action-gh-release@v2.3.2
         with:
           files: |
             Main.pdf
-            Exercises.pdf
           body_path: CHANGELOG.md
