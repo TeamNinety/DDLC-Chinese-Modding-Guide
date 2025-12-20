@@ -244,7 +244,7 @@ bg <背景编号>
 \end{center}
 
 \begin{ExtraKnowledge}
-show语句也可以使用behind 从句、as从句、onlayer从句。但由于在游戏中这些从句很少会使用,故不再展开讲解。有兴趣者可前往 \url{https://doc.renpy.cn/zh-CN/displaying_images.html} 了解详细内容。
+show语句也可以使用behind 从句、as从句、onlayer从句。但由于在游戏中这些从句很少会使用，故不再展开讲解。有兴趣者可前往 \url{https://doc.renpy.cn/zh-CN/displaying_images.html} 了解详细内容。
 \end{ExtraKnowledge}
 
 \subparagraph{at、with从句}
@@ -381,7 +381,7 @@ hide语句同样可以使用附加参数，但只能使用with从句，使用方
 
 scene语句类似于show语句，但与show语句有一个很明显的差异⸺使用scene语句会清空当前屏幕上的所有图像。scene语句的显示方式和特性的使用效果与show语句一致。
 
-尝试在游戏中运行以下代码,并猜测运行结果:
+尝试在游戏中运行以下代码，并猜测运行结果:
 \begin{lstlisting}[caption=script-ch1.rpy]
 # Chapter 0
 label ch0_start:
@@ -400,7 +400,7 @@ label ch0_start:
     scene bg club_day
     show monika 2a at t11 zorder 1
     m "那么，是时候来进行分工了。"
-    m 4k "[player],你想要做什么? "
+    m 4k "[player]，你想要做什么? "
     return
 \end{lstlisting}
 
@@ -507,7 +507,7 @@ label ch0_start:
     show monika 2a at t21 zorder 1
     show sayori 2a at t22 zorder 1
     m "那么，是时候来进行分工了。"
-    m 4k "[player],你想要做什么? "
+    m 4k "[player]，你想要做什么? "
     menu:
         "做小蛋糕":
             s "夏树的小蛋糕最好吃了！"
