@@ -1,6 +1,23 @@
 \documentclass[../../Main.tex]{subfiles}
 \begin{document}
 \section{使用变量}
+\subsection{变量的命名}
+变量命名必须遵循以下规则：
+\begin{itemize}
+    \item 变量名只能包含字母、数字和下划线（\_）；
+    \item 变量名不能以数字开头；
+    \item 变量名不能是Python的关键词（如：def、class、return等）；
+    \item 变量名区分大小写（如：var与Var是两个不同的变量）。
+\end{itemize}
+
+为了提高代码的可读性，避免出现混淆，以下为建议遵守的变量命名规则：
+\begin{itemize}
+    \item 变量名应具有描述性，能够反映变量的用途或内容。例如，使用player\_score而不是ps；
+    \item 对于实例、函数名等，使用下划线命名法，即使用下划线（\_）分隔单词，以提高可读性。例如，使用total\_count而不是 totalcount；
+    \item 避免使用过于简短或模糊的变量名，如a、b、data等，除非在非常短的代码段中使用；
+    \item 对于类、错误对象，建议使用大驼峰命名法（每个单词的首字母大写且不使用下划线），如MyClass、CustomError而非my\_class、custom\_error。
+\end{itemize}
+
 \subsection{python语句块}
 关于如何在Python语句块中定义变量，请阅读第\ref{sec:4.3}章
 \subsection{define语句}
