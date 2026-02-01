@@ -4,3 +4,4 @@
 2025/2/1
 Fixed wrong fonts in the chapter goals part.
 Fixed a wrong config of permissions, which causes the failed releasing.
+Add CC BY-NA-SA 4.0 License.
