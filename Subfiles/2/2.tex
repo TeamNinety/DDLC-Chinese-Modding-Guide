@@ -11,6 +11,10 @@ say语句是一个十分重要的语法，它可以让视觉小说角色拥有�
 \begin{lstlisting}
     "快到学园祭了"
     m "各位！我们得开始准备了！"
+    s "好耶！！！！ "
+    n "啊，我都等不及学园祭了。"
+    n "肯定会很棒的！ "
+    y "..."
 \end{lstlisting}
 
 \begin{Warning}
@@ -36,7 +40,7 @@ say语句是一个十分重要的语法，它可以让视觉小说角色拥有�
     }
     \tabletail{\hline}
     \tablelasttail{\hline}
-    \captionof{table}{角色名表格}
+    \tablecaption{角色名表格}
     \begin{supertabular}{|c|c|}
         \hline
         m & 莫妮卡（Monika）\\
@@ -60,6 +64,7 @@ label ch0_start:
     n "啊，我都等不及学园祭了。"
     n "肯定会很棒的！ "
     y "..."
+    m "那么，是时候来进行分工了。"
     return
 \end{lstlisting}
 
@@ -103,6 +108,7 @@ player是一个记录了玩家名字的变量。不理解变量是什么？没�
 不难发现，当需要使用变量时，我们只需要使用中括号将变量名括住。当我们需要将某段文字进行加粗等操作，可以对文字打上标签(既花括号)。若需要在对话中使用这些字符，则需要连续出现两次。如在对话中要出现花括号，则应该使用\{\{\}\}代替\{\}
 
 以下为常用的文字标签：
+
 \begin{center}
     \tablehead{
     \hline
@@ -111,7 +117,7 @@ player是一个记录了玩家名字的变量。不理解变量是什么？没�
     }
     \tabletail{\hline}
     \tablelasttail{\hline}
-    \captionof{table}{常用文本处理标签}
+    \tablecaption{常用文本处理标签}
     \label{table:2.2.1}
     \begin{supertabular}{|c|c|}
         \hline
@@ -231,12 +237,12 @@ bg <背景编号>
     }
     \tabletail{\hline}
     \tablelasttail{\hline}
-    \captionof{table}{常用的show语句附加参数}
+    \tablecaption{常用的show语句附加参数}
     \begin{supertabular}{|c|c|}
         \hline
         at <transform> & 将一个动画(transform)套用到立绘上\\
         \hline
-        with <transform> & 显示图像时使用指定的转场动画(transform)\\
+        with <transition> & 显示图像时使用指定的转场动画(transition)\\
         \hline
         zordr <数字> & 控制图像在Z轴上的位置\\
         \hline
@@ -250,7 +256,7 @@ show语句也可以使用behind 从句、as从句、onlayer从句。但由于在
 \subparagraph{at、with从句}
 \label{subsubsec:2.2.2.1}
 
-变换（transform），就如名字一样，定义了一个图像在屏幕上的变化内容与方式，即动画、运动方式、位置、透明度等。当一个变换作用于角色立绘时，应使用at从句。一个例子：t41。在这个变换中，t表示在这个位置上的角色静止站立在原地；4表示一共有4个站位，会将屏幕等分成4份；1表示从左往右该变换是所有站位中的第1个。
+变换（transform）与转场（transition），就如名字一样，定义了一个图像在屏幕上的变化内容与方式，即动画、运动方式、位置、透明度等。变换与转场使用相同的方式定义——动画与变换语言（ATL）。当一个变换作用于角色立绘时，应使用at从句。一个例子：t41。在这个变换中，t表示在这个位置上的角色静止站立在原地；4表示一共有4个站位，会将屏幕等分成4份；1表示从左往右该变换是所有站位中的第1个。
 
 所有适用于角色立绘的变换有:
 
@@ -262,7 +268,7 @@ show语句也可以使用behind 从句、as从句、onlayer从句。但由于在
     }
     \tabletail{\hline}
     \tablelasttail{\hline}
-    \captionof{table}{角色状态表}
+    \tablecaption{角色状态表}
     \begin{supertabular}{|c|c|}
         \hline
         t & 角色静止站立在原地 \\
@@ -288,7 +294,7 @@ show语句也可以使用behind 从句、as从句、onlayer从句。但由于在
 
 对于站位总数，共有1到4。
 
-当变换作为转场动画来使用时，应使用with从句。游戏中实现定义好的转场动画有：
+套用转场动画时，应使用with从句。游戏中实现定义好的转场动画有：
 
 \begin{center}
     \tablehead{
@@ -298,7 +304,7 @@ show语句也可以使用behind 从句、as从句、onlayer从句。但由于在
     }
     \tabletail{\hline}
     \tablelasttail{\hline}
-    \captionof{table}{常用转场动画编号及其效果}
+    \tablecaption{常用转场动画编号及其效果}
     \begin{supertabular}{|c|c|}
         \hline
         dissolve & 溶解效果 \\
@@ -373,7 +379,7 @@ hide monika
 hide语句同样可以使用附加参数，但只能使用with从句，使用方法与show语句的with从句相同，详细请见第\ref{subsubsec:2.2.2.1}小节。
 
 \begin{ExtraKnowledge}
-    扩展知识：hide语句同样可以使用onlayer从句，用于隐藏对应图层上的图像。但在游戏中很少会涉及到对图层的操作，故本书不会对onlayer从句展开讲解。有兴趣者课前往 \url{https://doc.renpy.cn/zh-CN/displaying_images.html} 了解详细内容。
+    hide语句同样可以使用onlayer从句，用于隐藏对应图层上的图像。但在游戏中很少会涉及到对图层的操作，故本书不会对onlayer从句展开讲解。有兴趣者课前往 \url{https://doc.renpy.cn/zh-CN/displaying_images.html} 了解详细内容。
 \end{ExtraKnowledge}
 
 \subsubsection{scene语句}

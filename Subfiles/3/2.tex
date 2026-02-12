@@ -110,6 +110,7 @@ def func1():
         print(x)
     print(x)
 \end{lstlisting}
+
 我们预期中的运行结果应该输出0 1 0。但事实上，这段代码会抛出UnboundLocalError错误。原因就是在func2中，我们定义了一个与func1中的x变量同名的变量，当Python运行到第4行时，由于第5行对变量x进行了定义，它会认为我们想要访问的应该是func2中的变量x而不是func1中的变量x，而func2中的变量x是在第5行才被定义，故Python会抛出错误，告诉我们我们企图在变量x定义之前访问x这个变量。
 
 这个时候如果我们想在嵌套函数内修改外部环境中的变量的值该怎么办呢？答案是nonlocal语句，它和global语句的用法一致，但是语义不同。如下例：
@@ -198,6 +199,7 @@ def side_story(winner, winner_point):
 side_story('monika', 5)
 
 \end{lstlisting}
+
 可以看到，如果用函数来实现，我们需要在外部环境定义许多函数与变量，例如unlocked、jump\_to\_monika等。稍有不当，我们就会污染整个外部环境。并且因为我们无法直接在游戏中对函数内的变量进行修改，所以我们没有办法在游戏运行过程中降低目标分数。
 如果用类来实现：
 \begin{lstlisting}
@@ -231,6 +233,7 @@ side_story.start('monika', 5)
 
 side_story.target_points = 5
 \end{lstlisting}
+
 我们可以看到，使用类与对象，我们就避免了在外部环境定义许多函数与变量，它们都被放在了类的命名空间中，避免了污染外部命名空间。并且类还有一个好处：容易在外部对内部变量进行修改，因此对于一开始的问题便得到了解决。
 
 \begin{ExtraKnowledge}
@@ -266,9 +269,9 @@ class Test:
 %\Output{3}%
 \end{lstlisting}
 
-第一行的“test = Test()”创造了一个Test对象。剩下两行代码则是在调用这个对象的counter方法。
+第一行的\verb|test = Test()|创造了一个Test对象。剩下两行代码则是在调用这个对象的counter方法。
 
-如果要在类的方法中定义或使用一个属性，必须使用“self.<变量名> = <值>”的方式进行赋值，否则这个属性就只会存在于方法的命名空间而不是对象的命名空间。简单理解就是如果不使用上述方式赋值，那么这个值就不会被保存到对象里面。
+如果要在类的方法中定义或使用一个属性，必须使用\verb|self.<变量名> = <值>|的方式进行赋值，否则这个属性就只会存在于方法的命名空间而不是对象的命名空间。简单理解就是如果不使用上述方式赋值，那么这个值就不会被保存到对象里面。
 
 \begin{ExtraKnowledge}
     Python中类与函数的使用远远不止这些，您可以前往 \url{https://www.runoob.com/python3/python3-function.html} 与 \url{https://www.runoob.com/python3/python3-class.html} 了解更多。

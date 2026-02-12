@@ -1,4 +1,224 @@
 \documentclass[../../Main.tex]{subfiles}
 \begin{document}
-\section{自定义GUI}
+\section{界面}
+玩家在Ren'Py游戏中所见到的一切，都可以大致分为两部分：图像（Image）与用户接口（User Interface）。用户接口包括但不限于：对话框、对话角色名、设置菜单、游戏的主界面等。通过基础部分的学习，我们已经学会了使用scene、show和hide语句向玩家展示图像。界面（Screen）就是Ren'Py为开发者所提供的一种定义用户接口的方式。在本节中，您将会了解Ren'Py的界面显示机制与初步学习界面语言。
+
+界面主要有两个功能：
+
+\begin{enumerate}
+    \item 向用户显示信息。信息的可以是文字、图像等。例如，say界面用于向玩家展示对话，包括人物和内容两大部分。
+    \item 允许玩家与游戏交互，例如：按钮。这种界面允许玩家触发某些行为，例如保存游戏与读取存档。
+\end{enumerate}
+
+界面主要由组件组成。组件包括：框架（Frame）、窗口（Window）、文本（Text）、按钮（Button）、纵向排列组件（Vbox）等。这些组件可以通过用户接口语句于界面语言中定义。
+
+一般来说，界面将会在以下情况被显式调用或隐式调用：
+
+\begin{itemize}
+    \item 通过“show screen”等语句被调用；
+    \item Ren'Py底层机制自动调用，如游戏启动时，Ren'Py会自动调用main\_menu界面；
+    \item 部分代码隐式调用，如使用menu语句时，会自动调用choice界面；
+    \item 将用户的操作与界面绑定，如按下ESC时，调出navigation界面；
+\end{itemize}
+
+同时用户在界面上的每次操作（包括移动鼠标），都会使界面刷新。
+\subsection{界面语言的结构}
+界面语言（Screen Language）是定义一个用户接口最正式的办法。它包含定义新界面的语句（screen语句）、添加可视组件至界面的语句和控制型语句。
+以模板内定义的say界面为例：
+\begin{lstlisting}
+screen say(who, what):
+    style_prefix "say"
+
+    window:
+        id "window"
+
+        text what id "what"
+
+        if who is not None:
+
+            window:
+                style "namebox"
+                text who id "who"
+
+    # 如果有对话框头像，会将其显示在文本之上。请不要在手机界面下显示这个，因为
+    # 没有空间。
+    if not renpy.variant("small"):
+        add SideImage() xalign 0.0 yalign 1.0
+
+    use quick_menu
+\end{lstlisting}
+
+首先，第1行的“screen say(who, what):”定义了一个名为say的界面，并且该界面在调用时接受两个参数：who与what。screen是最基础也是最重要的一个界面语言语句，用于定义新界面。screen语句接受一个参数，即界面名，同时可以在界面名后用英文括号定义这个界面所接受的参数。转换为代码如下形式：
+\begin{lstlisting}
+# 接受参数
+screen <界面名>(<参数1>, <参数2>, ...):
+    ...
+# 不接受参数
+screen <界面名>:
+    ...
+\end{lstlisting}
+
+第2行的“style\_prefix "say"”，是screen语句的一个特性，包括特性名称和特性值，特性值是简单表达式。“style\_prefix”是特性名称，“"say"”则是特性值。该语句表示在该界面内的所有组件的样式（style），都以“say”为前缀。例如，第七行的“text”组件，将会默认使用“say\_text”这个样式，除非通过style参数重新指定一个样式。
+
+\begin{ExtraKnowledge}
+    事实上，该组件所用样式应为say\_text，但由于修改组件id特性为“what”，Ren'Py内部使用say\_dialogue替代say\_text。无论如何请记住，style\_prefix效果如它的字面意思一样。
+\end{ExtraKnowledge}
+
+screen语句还可以接受以下特性：
+\begin{center}
+    % \tablefirsthead{
+    %     \hline
+    %     \multicolumn{1}{|c}{操作符}
+    %     \multicolumn{1}{|c|}{描述}
+    %     \multicolumn{1}{c|}{示例}
+    %     \hline
+    % }
+    \tablehead{
+    \hline
+    特性 & 描述 & 用法\\
+    \hline
+    }
+    \tabletail{\hline}
+    \tablelasttail{\hline}
+    \tablecaption{screen语句常用特性}
+    \begin{supertabular}{|c|p{8cm}|c|}
+        \hline
+        modal & 使界面成为模态界面，即在该界面关闭前，玩家无法与其他界面进行交互 & modal True\\
+        \hline
+        tag & 给界面添加一个标签，标签可以用来标识界面，当多个界面具有相同标签时，可以保证屏幕上只显示一个界面 & tag "my\_tag"\\
+        \hline
+        style\_prefix & 定义界面内组件的样式前缀 & style\_prefix "my\_prefix"\\
+        \hline
+    \end{supertabular}
+\end{center}
+
+
+第1、4、7、11、13、18行，分别向这个界面中添加了不同的组件。由此可见，大多数界面语言语句使用通用的语法。对此我们可以总结出以下规律：
+\begin{itemize}
+    \item 界面语言的语句的开头以某个关键词进入。如果该语句使用参数，参数就跟着开头的关键词后面，不同参数间使用空格隔开。
+    \item 界面语言的语句接受特性（property），特性由特性名称和特性值组成，特性值可以是一个简单表达式。特性跟在语句的开头关键词和参数后面，不同特性之间使用空格隔开。
+    \item 如果语句后面跟着一个英文冒号，代表该语句是一个语句块（Block）。多个同一等级的语句组成一个语句块。语句块的内容可以是特性列表或界面语言语句。
+\end{itemize}
+
+
+例如，第7行的text组件，将参数what作为text组件的参数，id则是text组件的一个特性，"what"代表着这是这个特性的值。
+
+
+\begin{itemize}
+    \item 特性列表；
+    \item 界面语言。
+\end{itemize}
+
+例如，第1行后的所有组件，都是screen语句下的代码块；第7行的text组件，是在window组件下的语句块，可以理解为text组件被包含在window组件内。
+
+现在，打开script-ch1.rpy文件，在文件开头（label语句前）按照下列的代码尝试定义一个简单的界面：
+\begin{lstlisting}
+screen my_first_screen():
+    text "这是一个自定义屏幕！"
+    timer 3 action Return()
+\end{lstlisting}
+
+\begin{ExtraKnowledge}
+    
+    timer 3 action Return() 在界面中定义了一个计时器组件，该组件会在3秒后触发Return()动作，从而关闭当前界面。Return()是Ren'Py界面语言中的一个内置动作，用于关闭当前界面并返回到之前的界面或游戏状态。Return()与timer将会在后续章节中详细介绍。
+\end{ExtraKnowledge}
+
+然后，在menu语句前添加如下代码：
+\begin{lstlisting}
+    call screen my_first_screen
+\end{lstlisting}
+
+在这里，您同样可以使用show screen my\_first\_screen来显示该界面。call screen语句会暂停当前的游戏流程，显示指定的界面，并在该界面关闭后返回到暂停的位置继续游戏。而show screen语句则会在不暂停游戏流程的情况下显示指定的界面，允许游戏继续进行，同时界面保持可见。由于我们希望在游戏结束时显示这个界面并等待其关闭后再继续，所以这里使用call screen更为合适。
+
+在本例中，使用show screen my\_first\_screen语句将会导致自定义界面与选项界面重叠。而使用call screen my\_first\_screen语句则会暂停游戏进度显示自定义界面，在自定义界面关闭后再显示选项界面。
+
+类似的，您可以使用hide screen my\_first\_screen来隐藏该界面。hide screen语句会立即隐藏指定的界面，而不会等待任何动作或条件。
+
+运行游戏，当运行到游戏选择时您会发现左上角出现了一行“这是一个自定义屏幕！”的文字。这就是我们刚刚定义的界面。
+
+\subsection{组件}
+界面语言中最重要的部分莫过于组件。组件在Ren'Py文档中被称为用户接口语句，是界面的基本构建块，用于显示内容和与玩家交互。Ren'Py提供了多种内置组件，常用的组件包括：text、textbutton、imagebutton、window、vbox、hbox等。
+
+特性可大致分为三类：通用组件特性、特定组件特性与样式特性。
+通用组件特性是所有组件都可以使用的特性。其中有以下几个常用的特性：
+\begin{center}
+    % \tablefirsthead{
+    %     \hline
+    %     \multicolumn{1}{|c}{操作符}
+    %     \multicolumn{1}{|c|}{描述}
+    %     \multicolumn{1}{c|}{示例}
+    %     \hline
+    % }
+    \tablehead{
+    \hline
+    特性 & 描述 & 用法\\
+    \hline
+    }
+    \tabletail{\hline}
+    \tablelasttail{\hline}
+    \tablecaption{常用通用组件特性}
+    \begin{supertabular}{|c|c|c|}
+        \hline
+        at & 组件套用transform & at my\_transform\\
+        \hline
+        style & 指定组件使用特定样式 & style "my\_style"\\
+        \hline
+        style\_prefix & 定义界面内组件的样式前缀 & style\_prefix "my\_prefix"\\
+        \hline
+    \end{supertabular}
+\end{center}
+
+
+下面我们来了解几个常用组件的用法：
+\subsubsection{button、textbutton、 imagebutton}
+button、textbutton与imagebutton组件都用于创建一个按钮，玩家可以点击该按钮以触发特定的动作。不同的是，imagebutton组件是一个图像按钮，允许使用自定义图像作为按钮的外观，而textbutton组件则以文字作为按钮的外观，button只创造出一个可以交互的区域。
+
+textbutton与imagebutton都接受以下特性：
+
+\begin{center}
+    \tablehead{
+    \hline
+    特性 & 描述 & 用法\\
+    \hline
+    }
+    \tabletail{\hline}
+    \tablelasttail{\hline}
+    \tablecaption{textbutton、imagebutton组件常用特性}
+    \begin{supertabular}{|c|p{6cm}|c|}
+        \hline
+        action & 定义按钮被点击时触发的动作 & \verb|action Jump("my_label")|\\
+        \hline
+        hovered & 定义鼠标悬停在按钮上时触发的动作 & \verb|hovered Show("hover_effect")|\\
+        \hline
+        unhovered & 定义鼠标离开按钮时触发的动作 & \verb|unhovered Hide("hover_effect")|\\
+        \hline
+        sensitive & 定义按钮是否可点击（当不提供该特性时，由用户行为决定） & \verb|sensitive points['monika'] >= 3|\\
+        \hline
+        selected & 定义按钮是否处于选中状态（当不提供该特性时，由用户行为决定） & \verb|selected points['monika'] >= 5|\\
+    \end{supertabular}
+\end{center}
+
+
+\subsection{样式}
+样式（style）是Ren'Py界面中一种特殊的特性，用于定义界面组件的外观和布局。
+\subsubsection{样式的定义}
+样式可以通过style语句来定义，以模板中定义的文本样式为例：
+\begin{lstlisting}
+style normal is default:
+    xpos gui.text_xpos
+    xanchor gui.text_xalign
+    xsize gui.text_width
+    ypos gui.text_ypos
+
+    text_align gui.text_xalign
+    layout ("subtitle" if gui.text_xalign else "tex")
+\end{lstlisting}
+
+第一行style normal is default:定义了一个名为normal的样式，并继承自default样式。样式名称可以是任意的，但通常会使用具有描述性的名称来表示该样式的用途或特征。
+
+随后的行定义了该样式的属性，包括位置、大小、对齐方式等。每个属性都以属性名称开头，后面跟着属性值。属性值可以是一个简单的值，也可以是一个表达式，甚至是一个列表。
+
+\subsection{动画与变换语言}
+动画与变换语言（ATL）是Ren'Py界面语言中的一个重要部分，用于定义界面组件的动画效果和变换。通过使用ATL，开发者可以创建丰富多彩的界面动画，提升游戏的视觉体验。
+
 \end{document}
