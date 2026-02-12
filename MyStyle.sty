@@ -5,6 +5,8 @@
 \RequirePackage[dvipsnames]{xcolor}
 \RequirePackage[fontset=none,scheme=chinese,heading=true]{ctex}
 \RequirePackage{ruby, wallpaper, indentfirst}
+
+\hypersetup{bookmarksdepth=5,bookmarksnumbered=true}
 \setlength{\parindent}{2em}
 % Command to store the current chapter image to use for all future chapters, can be changed any time in the document and can be empty
 \newcommand{\thechapterimage}{}
@@ -22,13 +24,13 @@
 \definecolor{ocre}{RGB}{3, 136, 252} % Define the color used for highlighting throughout the book
 % Set Default Fonts
 
-\setCJKmainfont{Noto Serif CJK SC}[ItalicFont=FZKai-Z03]
-\setCJKsansfont{Noto Sans CJK SC}[ItalicFont=FZKai-Z03]
+\setCJKmainfont{思源宋体}[ItalicFont=FZKai-Z03]
+\setCJKsansfont{思源黑体}[ItalicFont=FZKai-Z03]
 \setCJKmonofont{Sarasa Term SC}
 
-\setmainfont{Noto Serif}
-\setsansfont{Noto Sans}
-\setmonofont{Sarasa Term SC}
+\setmainfont{FreeSerif}
+\setsansfont{Inter}
+\setmonofont{FreeMono}
 
 \setlength{\headheight}{13pt}
 
@@ -267,7 +269,7 @@
 \newcommand{\Output}[1]{\textit{\#输出：#1}}
 \newcommand{\PyOnly}{\textbf{[Python Only]}}
 \newcommand{\version}{0.1.0-alpha}
-\newenvironment{ChapterGoals}{\textbf{本节目标包括：}\FZFangSong}{}
+\newenvironment{ChapterGoals}{\textbf{本节目标包括：}\FZFangSong}{\par}
 
 % Define the color box
 \tcbuselibrary{breakable}

@@ -2,6 +2,7 @@
 
 \begin{document}
 \chapter{增添资源}
+\label{4}
 \begin{ChapterGoals}
     \begin{itemize}
         \item 学会增添图像、音频资源；
@@ -40,6 +41,7 @@ define <变量名> = DynamicCharacter('<存储角色名的变量名>', image='<s
 \end{Warning}
 
 \begin{ExtraKnowledge}
+    
     在某些情况下，我们可能改变角色说话内容的双引号为其他符号，我们可以通过修改what\_prefix和what\_suffix实现效果。
 
     正常情况下，除旁白外所有的角色说的话都会被双引号包住。如：
@@ -61,7 +63,7 @@ define c = DynamicCharacter('c_name', image='charlie', what_prefix='"', what_suf
 
 现在，我们就成功定义了Charlie这个角色。那么这段代码应该放在哪里呢？答案是game目录下的definitions.rpy文件内。这个文件里储存着所有在游戏中需要用到的资源的定义。
 
-打开编辑器的查找功能，搜索：“define s = DynamicCharacter”，随后在这一行上面或下面增添例如上述的代码。
+打开编辑器的查找功能，搜索：\verb|define s = DynamicCharacter|，随后在这一行上面或下面增添例如上述的代码。
 
 现在，definitions.rpy文件内的代码应该长这样：
 \begin{lstlisting}
@@ -200,6 +202,7 @@ Ren'Py支持将音频切割成一段播放。其中，共有三种行为：
 \begin{lstlisting}
 <from [开始] to [结束]>
 \end{lstlisting}
+
 例如，现在有一个音频名为“festival.ogg”存放在mod\_assets文件夹中。现在我们想要从这个音频的第5秒开始播放，到第15秒停止，我们可以修改音频的定义为：
 
 \begin{lstlisting}

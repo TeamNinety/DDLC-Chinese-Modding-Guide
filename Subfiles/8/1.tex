@@ -1,22 +1,29 @@
 \documentclass[../../Main.tex]{subfiles}
 \begin{document}
-\section{Ren'Py的界面显示机制}
-玩家在Ren'Py游戏中所见到的一切，都可以大致分为两部分：图像（Image）与用户接口（User Interface）。用户接口包括但不限于：对话框、对话角色名、设置菜单、游戏的主界面等。通过基础部分的学习，我们已经学会了使用scene、show和hide语句向玩家展示图像。界面就是Ren'Py为开发者所提供的一种定义用户接口的方式。在本节中，您将会了解Ren'Py的界面显示机制与初步学习界面语言。
+\section{自定义GUI}
+在模板中，GUI的定义被分为了三部分，一部分是GUI的颜色，定义在gui.rpy文件中；一部分则是GUI的布局，通过界面语言定义在screen.rpy文件中（在下一章我们将会学习界面语言）；还有一部分是图片等已经生成的资源，存储在images.rpa文件中。其中对颜色的修改主要涉及gui.rpy文件与images.rpa文件中。
 
-界面主要有两个功能：第一，向用户显示信息。信息的可以是文字、图像等。例如，say界面用于向玩家展示对话，包括人物和内容两大部分。第二，允许玩家与游戏交互，例如：按钮。这种界面允许玩家触发某些行为，例如保存游戏与读取存档。
-
-界面主要由组件组成。组件包括：框架（Frame）、窗口（Window）、文本（Text）、按钮（Button）、纵向排列组件（Vbox）等。这些组件可以通过用户接口语句于界面语言中定义。
-
-一般来说，界面将会在以下情况被显式调用或隐式调用：
-
+在gui.rpy中，主要定义了以下几个方面的内容：
 \begin{itemize}
-    \item 通过“show screen”等语句被调用；
-    \item Ren'Py底层机制自动调用，如游戏启动时，Ren'Py会自动调用main\_menu界面；
-    \item 部分代码隐式调用，如使用menu语句时，会自动调用choice界面；
-    \item 将用户的操作与界面绑定，如按下ESC时，调出navigation界面；
+    \item GUI配置变量：包括字体、音效等。
+    \item 全局颜色（这里的颜色仅包括：文字、强调色，对于GUI界面背景等需要进行解包处理）；
+    \item 文本大小、选项宽窄等。
 \end{itemize}
 
-同时用户在界面上的每次操作（包括移动鼠标），都会使界面刷新。
+对于gui.rpy文件的修改是比较简单的，直接打开文件进行修改即可。需要注意的是，修改颜色时应当使用十六进制颜色码，修改字体时您需要参照第\ref{4}章的内容将字体文件添加在mod\_assets/文件夹中并进行定义引用。
 
+\begin{Warning}
+    我们不推荐您修改分辨率与文本框等内容（除非您需要将您的模组移植到手机端等平台上），因为这可能会导致一些意想不到的问题。
+\end{Warning}
+
+对于gui.rpy文件的修改，您可以参考\url{https://doc.renpy.cn/zh-CN/gui.html}中的内容。
+
+\subparagraph{解包rpa}
+对于拥有Python环境的读者，您可以使用unrpa工具。对于大部分读者，您可以通过rpaextract工具进行解包。
+您可以在\url{https://iwanplays.itch.io/rpaex}下载rpaextract工具。rpaextract工具使用非常简单，下载后将您需要解包的rpa文件拖入rpaextract.exe程序中即可进行解包。
+
+解包images.rpa文件后，您可以在文件夹中找到gui文件夹，里面存储了大量的GUI资源图片。您可以根据需要使用软件对其进行修改与替换。
+
+请注意，所有修改后的GUI资源图片均需要放置在mod\_assets/gui/文件夹中，按照第\ref{4}章与\url{https://doc.renpy.cn/zh-CN/gui.html}的内容进行定义引用。
 
 \end{document}

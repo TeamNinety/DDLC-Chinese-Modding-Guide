@@ -28,6 +28,7 @@ label ch0_end:
 \end{lstlisting}
 
 \begin{Warning}
+
     通常在label语句末尾，我们都会使用return来返回到上一个调用栈（stack）。在这里您可以理解为回到之前执行的函数、label继续运行游戏。
 
     如果没有return语句，在执行完本label，Ren'Py会继续调用在本label定义之后的label。
@@ -55,7 +56,7 @@ label ch0_natsuki:
 现在，让我们修改一下script-ch0.rpy中的内容：
 \begin{lstlisting}[caption=script-ch0.rpy]
 default n_aff = 0
-default s_aff = 0
+default m_aff = 0
 default demo = False
 
 label ch0_start:
@@ -84,14 +85,14 @@ label ch0_start:
         "做小蛋糕":
             s "夏树的小蛋糕最好吃了！"
             python:
-                $ n_aff += 1
-                $ m_aff -= 1
+                n_aff += 1
+                m_aff -= 1
             call ch0_natsuki
         "布置教室":
             m "那我们可得抓紧时间了！"
             python:
-                $ m_aff += 1
-                $ n_aff -= 1
+                m_aff += 1
+                n_aff -= 1
             call ch0_monika
     return
 \end{lstlisting}
@@ -163,6 +164,7 @@ else:
 每一个if语句中的表达式都应当返回一个True或False（见表\ref{table:4.1.5}）。结果为True时，将会执行if语句块中的代码，如果结果为False，Python就会忽略if语句块内的所有代码。
 
 \begin{ExtraKnowledge}
+    
     表达式也可以是一个数字、一个字符串、或定义了\_\_bool\_\_魔术方法的对象。
 
     不为0的数字、非空的字符串以及\_\_bool\_\_方法返回True的对象都会被视为True，而None、空字符串、0，当然还有False本身则会被视为False
