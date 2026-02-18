@@ -1,0 +1,75 @@
+\documentclass[../../Main.tex]{subfiles}
+\begin{document}
+\chapter{安卓移植教程}
+\begin{ChapterGoals}
+    \begin{itemize}
+        \item 将您的Mod移植到安卓端。
+    \end{itemize}
+\end{ChapterGoals}
+
+
+对于大部分创作者来说，将自己的Mod移植到安卓端上，无疑是将自己精心打磨制造Mod传播给更多人，增加自己Mod知名度的好途径。在本章中，我们将会学习如何将您的Mod移植到安卓端上。
+
+
+\begin{Attention}
+    在开始移植之前，您必须先了解以下事项：
+    \begin{enumerate}
+        \item 如果您移植的不是自己的Mod，请确保拥有作者的授权；
+        \item 在移植完成后，根据IP Guidelines，您不得将安装包上传至包括Google Play、TapTap在内的\textbf{任何}应用市场；
+    \end{enumerate}
+\end{Attention}
+
+\section{准备移植环境}
+在开始前，我们先来确认一下一些基本的配置要求：
+\begin{enumerate}
+    \item 足够的RAM（至少8GB，对于资源更多的Mod甚至可能需要12GB以上）；
+    \item JDK 8（在Ren'Py 8上应为JDK 21，JDK8安装包可在附加文件中找到）；
+    \item rpaextract；
+    \item 一台安卓手机。
+\end{enumerate}
+
+
+\section{解包RPA}
+由于安卓平台的特殊性，我们需要将原版DDLC的RPA文件进行解包处理。
+
+首先，根据第\ref{sec:8.1}节下载rpaextract，打开Ren'Py SDK，选中您想要移植的项目，在右侧选项中选择打开目录中的game/，将rpaextract.exe放在此处。
+
+然后，选中audio.rpa、fonts.rpa、images.rpa三个文件，将其拖在rpaextract.exe上，使用rpaextract运行，等待解包完成。
+
+最后，删除rpaextarct.exe文件，至此解包RPA部分就告一段落了。
+
+\section{打包APK}
+现在，回到Ren'Py SDK中，选中项目，在右侧操作中选择安卓。
+
+当被问及是否下载RAPT（Ren'Py Android Platform Tools）时，选择是。下载完成后重启Ren'Py SDK。
+
+再次点击安卓选项，您可以先点击模拟中的手机选项进行一轮完整的游戏，查看是否有GUI布局不对的地方以便及时修改。一般来说，模板自带的GUI设定是没有问题的。
+
+然后，点击安装SDK选项，在Android Terms界面选择是，此时会开始下载Android SDK。
+
+下载完成后，点击生成密钥选项。您可以根据自己的需要修改配置。当出现以下界面时，选择是：
+\begin{quote}
+    即将在android.keystore文件中创建密钥。
+
+    你需要备份此文件。如果该文件丢失，您将无法更新您的应用。
+
+    您还需要将密钥文件放置在安全的位置。若攻击者获取此文件，就可以假冒您的应用，并窃取用户数据。
+
+    您是否会备份android.keystore并将其置于安全的位置？
+
+    选择“否”将组织密钥创建。
+\end{quote}
+
+点击构建中的配置，按照Ren'Py SDK中的说明填写，请注意以下选项：
+\begin{enumerate}
+    \item 当问及“您希望您的应用如何显示？”时，选择横屏模式。
+    \item 当问及“您希望通过哪个应用商店支持应用内购买？”时，选择以上都不需要。
+    \item 当问及“您希望自动更新Java源代码吗？”时，选择“是。此为大多数项目的最佳选项。”
+\end{enumerate}
+
+然后您会回到上一个界面。此时，确保勾选了“Universal APK”而非“Play Bundle”。最后，点击构建应用包，若Ren'Py SDK提示下载Gradle、Android SDK Command-line Tools等时，选择是。等待一定时间后，您的模组就会被打包成为APK了。
+
+接下来，将APK发送至您的手机上，安装并进行一轮完整的游戏，查看是否有报错。若没有报错、Bug等，那么您的模组就成功移植到了安卓端。
+
+
+\end{document}

@@ -1,6 +1,7 @@
 \documentclass[../../Main.tex]{subfiles}
 \begin{document}
 \section{自定义GUI}
+\label{sec:8.1}
 在模板中，GUI的定义被分为了三部分，一部分是GUI的颜色，定义在gui.rpy文件中；一部分则是GUI的布局，通过界面语言定义在screen.rpy文件中（在下一章我们将会学习界面语言）；还有一部分是图片等已经生成的资源，存储在images.rpa文件中。其中对颜色的修改主要涉及gui.rpy文件与images.rpa文件中。
 
 在gui.rpy中，主要定义了以下几个方面的内容：
@@ -21,6 +22,7 @@
 \subparagraph{解包rpa}
 对于拥有Python环境的读者，您可以使用unrpa工具。对于大部分读者，您可以通过rpaextract工具进行解包。
 您可以在\url{https://iwanplays.itch.io/rpaex}下载rpaextract工具。rpaextract工具使用非常简单，下载后将您需要解包的rpa文件拖入rpaextract.exe程序中即可进行解包。
+对于网络环境特殊的用户，您可以在本书的附属文件中找到该工具。
 
 解包images.rpa文件后，您可以在文件夹中找到gui文件夹，里面存储了大量的GUI资源图片。您可以根据需要使用软件对其进行修改与替换。
 
