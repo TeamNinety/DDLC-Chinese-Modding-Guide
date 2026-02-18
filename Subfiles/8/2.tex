@@ -330,7 +330,24 @@ Start会跳转到指定脚本标签处。默认为start标签。
 
 更多的界面行为，可以参考\url{https://doc.renpy.cn/zh-CN/screen_actions.html}。
 
+\subsubsection{其他行为}
+其他行为包括：If、Function、Confirm等。
+\paragraph{If}
+If是一个判断行为，其接受三个参数：expression、true、false。
 
+expression是需要判断的表达式，true则是当表达式计算结果为True时的行为，false同理。
+
+\paragraph{Function}
+Function用于在界面语言中调用Python函数（方法）。Function接受4个参数，其中我们主要关注3个：callable、*args、**kwargs。
+
+callable参数传递将要调用了Python函数，*args、**kwargs是Python中的一种特殊的参数定义方式，在这里您只需要知道您传递给Function的所有参数都会被传递给Python函数。
+
+\paragraph{Confirm}
+Confirm会显示一个确认菜单，其与renpy.confirm函数行为相同。
+
+Confirm接受4个参数，我们主要关注3个：prompt、yes、no。
+
+prompt参数是向用户显示的提示内容，yes则为用户点击是所执行的行为，否则执行no的行为。no默认参数为None
 
 \section{样式}
 样式（style）是Ren'Py界面中一种特殊的特性，用于定义界面组件的外观和布局。
