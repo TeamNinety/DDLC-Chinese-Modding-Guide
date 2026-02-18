@@ -168,8 +168,20 @@ screen my_first_screen():
     \end{supertabular}
 \end{center}
 
+对于style\_prefix特性来说，Ren'Py会将它们与组件的id特性组合成一个完整的样式名称。例如，对于一个文本组件（text），如果style\_prefix的值为"my\_prefix"，则Ren'Py会将它们组合成一个完整的样式名称"my\_prefix\_text"，并查找该样式，尝试使用该样式来渲染组件。
 
 下面我们来了解几个常用组件的用法：
+
+\subsubsection{text}
+text组件用于在界面上显示文本。它接受一个参数，即要显示的文本内容。
+
+如下例：
+\begin{lstlisting}
+screen my_first_screen():
+    text "这是一个文本组件！"
+\end{lstlisting}
+
+
 \subsubsection{button、textbutton、 imagebutton}
 button、textbutton与imagebutton组件都用于创建一个按钮，玩家可以点击该按钮以触发特定的动作。不同的是，imagebutton组件是一个图像按钮，允许使用自定义图像作为按钮的外观，而textbutton组件则以文字作为按钮的外观，button只创造出一个可以交互的区域。
 
@@ -198,27 +210,539 @@ textbutton与imagebutton都接受以下特性：
     \end{supertabular}
 \end{center}
 
+对于textbutton组件来说，任何以text\_开头的特性都会被传递给text组件。
 
-\subsection{样式}
+对于imagebutton组件来说，它还接受额外的特性：idle、hover、selected\_idle、selected\_hover、insensitive。这些特性用于定义按钮在不同状态下的图像。例如，idle特性定义了按钮在没有获取焦点的正常状态下的图像，hover特性定义了按钮在鼠标悬停（得到焦点）时的图像，selected\_idle特性定义了按钮在选中状态但没有获得焦点的图像，selected\_hover特性定义了按钮在选中状态下并获取焦点的图像，insensitive特性定义了按钮在不可点击状态下的图像。
+
+当然，imagebutton的额外特性可以通过auto属性来简化。如\verb|auto "this_button_%s.png"|且并没有定义idle属性时，Ren'Py会自动将idle属性设置为"this\_button\_idle.png"去查找图像文件。
+
+如下例：
+\begin{lstlisting}
+default button_enabled = True
+screen my_first_screen():
+    textbutton "点击我！" action [Notify("你点击了按钮！"), Return()] sensitive button_enabled is True
+\end{lstlisting}
+
+\subsubsection{frame、fixed}
+
+fixed、frame组件都是容器组件，用于包含其他组件并控制它们的布局。
+
+fixed组件允许您在界面上自由放置子组件，默认情况下会填充整个可用区域。frame组件则会包含一个背景，并且在多个组件被应用的情况下会自动转化成fixed组件。
+
+\subsubsection{vbox、hbox、grid}
+vbox组件会将其子组件垂直排列，hbox组件则会将其子组件水平排列。grid组件则会将其子组件按照网格布局进行排列，其接受2个参数，分别为网格的行号与列号。
+
+\subsubsection{null}
+null组件是一个特殊的组件，它不会在界面上显示任何内容，但会创造出一块空白区域，用于间隔不同组件。
+null不接受任何参数，但可以接受两个特性，例如：width与height。width特性定义了null组件的宽度，height特性定义了null组件的高度。通过调整width与height的值，可以控制null组件占据的空间大小，从而实现对界面布局的微调。
+
+\subsubsection{timer}
+timer是一个定时器组件，其接受一个参数：时间。它拥有三个特性：action、repeat、modal。
+
+action特性用于指明在定时器结束后的行为。
+
+repeat特性用于指定定时器是否重复执行。
+
+modal特性用于指明当处于模态界面时timer计时器的行为。
+
+对于更多的界面组件，您可以前往\url{https://doc.renpy.cn/zh-CN/screens.html}获取更多信息。
+
+\subsubsection{图像组件}
+
+图像组件使用add语句进行添加，如下例：
+\begin{lstlisting}
+screen image_screen():
+    add "bg club_day"
+    add "monika 1a" at t11
+\end{lstlisting}
+
+\subsection{界面行为}
+在界面语言中，我们常常见到action后跟了一些Python函数。例如上面例子中的\verb|Notify()|、\verb|Return()|等。这些就被称为界面行为。
+
+界面行为可分为：控制行为、数据行为、菜单行为等。下面让我们来了解常用的一些界面行为。
+
+\subsubsection{控制行为}
+控制行为是指用于管理界面、交互结果和流程控制的行为。
+\paragraph{Call}
+Call行为与renpy.call、call语句相同，会结束当前语句并调用脚本标签。如下例：
+\begin{lstlisting}
+label my_label(points):
+    if points > 10:
+        m "哇！你的分数还挺高的。"
+    return
+
+screen my_first_screen():
+    textbutton "这是一个按钮" action Call("my_label", 15)
+\end{lstlisting}
+
+\paragraph{Jump}
+Jump行为与renpy.jump、jump语句相同，会跳转到脚本标签。
+
+\paragraph{Hide}
+Hide行为会隐藏一个界面，其接受三个参数：screen、transition、\_layer，我们主要关注前两个参数。
+
+screen是界面的名称，transition则是隐藏界面时的转场。
+
+如下例：
+\begin{lstlisting}
+screen my_first_screen():
+    textbutton "隐藏我！" action Hide("my_first_screen", wipeleft)
+\end{lstlisting}
+
+\paragraph{NullAction}
+NullAction不会执行任何行为。
+
+\paragraph{Return}
+Return行为会使用提供的值返回，当以\verb|call screen|语句调用时，Return行为所返回的值会被保存在\_return变量中。如下例：
+\begin{lstlisting}
+screen my_first_screen():
+    frame:
+        vbox:
+            textbutton "返回1" action Return(1)
+            textbutton "返回2" action Return(2)
+
+label my_label:
+    call screen my_first_screen()
+    if _return == 1:
+        "你点击了返回1"
+    elif _return == 2:
+        "你点击了返回2"
+    return
+\end{lstlisting}
+
+\paragraph{Show、ShowTransient、ToggleScreen}
+这三个行为都会显示另一个界面。
+
+Show行为相当于show screen语句，ShowTransient则会显示一个临时界面，临时界面会在交互完成后隐藏。
+
+ToggleScreen则会切换界面可视性，例如\verb|ToggleScreen("a")|，若此时a界面显示则该语句等同于Hide，当a界面没有显示时该语句等同于Show。
+
+\subsubsection{菜单行为}
+常用的菜单行为包括：MainMenu、Quit、Start。
+\paragraph{MainMenu}
+MainMenu会触发Ren'Py回到主菜单。其接受两个参数：confirm、save。confirm参数为True时，Ren'Py将会询问用户是否要回到主菜单。save参数为True时，Ren'Py在重启前会进行存档。
+
+\paragraph{Quit}
+Quit将会退出游戏。其接受一个confirm参数，同MainMenu相同。
+
+\paragraph{Start}
+Start会跳转到指定脚本标签处。默认为start标签。
+
+更多的界面行为，可以参考\url{https://doc.renpy.cn/zh-CN/screen_actions.html}。
+
+
+
+\section{样式}
 样式（style）是Ren'Py界面中一种特殊的特性，用于定义界面组件的外观和布局。
-\subsubsection{样式的定义}
+\subsection{样式的定义}
 样式可以通过style语句来定义，以模板中定义的文本样式为例：
 \begin{lstlisting}
-style normal is default:
+style edited is default:
+    font "mod_assets/font/sourcehanserif.otf"
+    kerning 8
+    outlines [(10, "#000", 0, 0)]
     xpos gui.text_xpos
     xanchor gui.text_xalign
     xsize gui.text_width
     ypos gui.text_ypos
-
     text_align gui.text_xalign
     layout ("subtitle" if gui.text_xalign else "tex")
 \end{lstlisting}
 
-第一行style normal is default:定义了一个名为normal的样式，并继承自default样式。样式名称可以是任意的，但通常会使用具有描述性的名称来表示该样式的用途或特征。
+第一行\verb|style edited is default:|定义了一个名为edited的样式，\verb|is default|从句表示继承自default样式。样式名称可以是任意的，但通常会使用具有描述性的名称来表示该样式的用途或特征。
 
 随后的行定义了该样式的属性，包括位置、大小、对齐方式等。每个属性都以属性名称开头，后面跟着属性值。属性值可以是一个简单的值，也可以是一个表达式，甚至是一个列表。
 
-\subsection{动画与变换语言}
+\subsection{样式特性}
+样式也有特性常见的特性包括：位置样式特性、文字样式特性、按钮样式特性等。接下来让我们了解一些常见用组件所接受的特性。
+
+\subsubsection{位置样式特性}
+
+位置样式特性正如其名，用于定义组件在界面上的位置。几乎所有的可视组件都可以使用位置样式特性。常用的位置属性包括：[x|y]pos、[x|y]align、[x|y]anchor、[x|y]size等。
+
+\paragraph{[x|y]pos}
+[x|y]pos属性用于定义组件在界面上的具体位置。xpos属性定义组件的水平位置，ypos属性定义组件的垂直位置，pos属性使用一个二元元组，第一个元素作为xpos的值，第二个元素作为ypos的值。
+
+三个属性都以左上角为坐标原点，x轴以右侧为正方向向右延伸，y轴以下方为正方向向下延伸。
+
+如下例：
+\begin{lstlisting}
+screen my_first_screen():
+    text "这是一个文本组件！" xpos 100 ypos 200
+\end{lstlisting}
+
+xpos的值最大不应超过1280、ypos的值最大不应超过720，否则组件将会超出界面范围而不会被呈现给用户。
+
+\paragraph{[x|y]align}
+[x|y]align属性用于将可视组件显示在界面上的某个相对位置。xalign属性定义组件的水平对齐方式，yalign属性定义组件的垂直对齐方式，align属性使用一个二元元组，第一个元素作为xalign的值，第二个元素作为yalign的值。
+
+[x|y]align属性的值范围在0.0到1.0之间，0.0表示左对齐或顶端对齐，0.5表示居中对齐，1.0表示右对齐或底端对齐。当然也可以是0.3、0.8等其他值，表示相对于界面宽度或高度的某个位置。
+
+
+如下例：
+\begin{lstlisting}
+screen my_first_screen():
+    text "这是一个文本组件！" xalign 0.7 yalign 0.5
+\end{lstlisting}
+
+\paragraph{[x|y]offset}
+[x|y]offset属性用于在组件的基础位置上进行偏移。xoffset属性定义组件在水平方向上的偏移量，yoffset属性定义组件在垂直方向上的偏移量，offset属性使用一个二元元组，第一个元素作为xoffset的值，第二个元素作为yoffset的值。
+
+[x|y]offset属性的值可以是正数、负数或零，正数表示向右或向下偏移，负数表示向左或向上偏移，零表示不进行偏移。
+
+如下例：
+\begin{lstlisting}
+screen my_first_screen():
+    text "这是一个文本组件！" xalign 1.0 ypos 100 yoffset -50
+\end{lstlisting}
+
+这段代码的运行效果与下列代码相同：
+\begin{lstlisting}
+screen my_first_screen():
+    text "这是一个文本组件！" xalign 1.0 ypos 50
+\end{lstlisting}
+
+\paragraph{[x|y][maximum|minimum]}
+[x|y][maximum|minimum]属性用于限制组件在界面上的最大或最小位置。xmaximum属性定义组件在水平方向上的最大位置，ymaximum属性定义组件在垂直方向上的最大位置，maximum属性使用一个二元元组，第一个元素作为xmaximum的值，第二个元素作为ymaximum的值。minimum属性的用法与maximum属性类似，只不过是定义组件在界面上的最小位置。
+
+如下例：
+\begin{lstlisting}
+screen my_first_screen():
+    frame:
+        background "#000000"
+        vbox:
+            maximum (500, 300)
+            text "这是一个文本组件！" align (0.0, 0.0)
+            text "这是另一个超超超超超超超超超超超超超长文本组件！" align (0.0, 0.0)
+\end{lstlisting}
+
+此时我们会发现由于第二个文本组件内容太长了，若不换行会导致vbox的大小超过xmaximum属性所定义的最大值，故此时Ren'Py会自动将第二个文本组件换行。去掉maximum属性，看看第二个文本组件是否还会换行。
+
+\paragraph{[x|y|xy]size}
+[x|y|xy]size属性用于定义组件在界面上的大小。xsize属性定义组件的宽度，ysize属性定义组件的高度，xysize属性使用一个二元元组，第一个元素作为xsize的值，第二个元素作为ysize的值。
+
+[x|y|xy]size属性的原理是将maximum与minimum属性的值设置为相同的值，从而强制组件的大小固定在该值上。故xysize属性也可以被maximum与minimum属性代替。
+
+\paragraph{[x|y]fill}
+[x|y]fill属性用于定义是否让可视组件在一定方向上填满所有可用空间。若不为True，则可视组件只占用包含所有子组件的空间。
+
+如下例：
+\begin{lstlisting}
+screen my_first_screen():
+    frame:
+        background "#000000"
+        maximum (500, 300)
+        xfill True
+        yfill True
+        text "这是一个很短文本组件！" align (0.0, 0.0)
+\end{lstlisting}
+
+运行游戏，我们会发现即使文本组件大小并没有达到maximum设定的最大值，但frame组件依旧被填满了。
+
+\paragraph{[x|y]anchor}
+anchor属性用于定义组件锚点相对于可视组件的位置，接受一个0.0到1.0之间的浮点数。锚点是组件的一个参考点，用于确定组件在界面上的位置。xanchor属性定义锚点相对于组件的水平位置，yanchor属性定义锚点相对于组件的垂直位置，anchor属性使用一个二元元组，第一个元素作为xanchor的值，第二个元素作为yanchor的值。
+
+例如，我们想在界面的底部渲染一个文本组件而不使用yalign属性，若我们使用以下代码：
+\begin{lstlisting}
+screen my_first_screen():
+    text "这是一个文本组件！" ypos 720
+\end{lstlisting}
+
+运行游戏，会发现此时文本组件渲染在了界面之外了。
+
+想象一个方框，这个方框就是文本组件。锚点是在这个方框内的一个点，锚点的位置就代表了这个方框在整个界面上的位置。我们通过\verb|ypos 720| 设置了方框的Y坐标为720，那么我们该如何知道这个Y坐标720是指方框的上边的坐标是720还是指方框的下边的坐标是720呢？这就要看锚点的位置了。锚点默认在组件的左上角位置，那么Y坐标720就指的是方框的上边的坐标是720，因此这个文本组件就会被渲染在界面之外了。
+
+我们可以通过将yanchor属性设置为1.0来将锚点移动到组件的底部。此时锚点处于文本组件左下角位置，那么这个\verb|ypos 720|此时就代表方框的下边的Y坐标为720，文本组件正确地渲染在屏幕内。
+
+
+
+\subsubsection{文本样式特性}
+文本样式特性用于定义文本组件的外观和布局。常用的文本样式特性包括：font、size、color、kerning、line\_spacing等，可以使用文本样式特性的组件包括：text、textbutton等。
+
+\paragraph{color}
+color属性用于定义文本的颜色。它接受一个16进制颜色值。当color属性被设置时，文本将以指定的颜色显示，默认为\#ffffff（白色）。
+
+\paragraph{size}
+size属性用于定义文本的大小。它接受一个整数，表示文本的字体大小。当size属性被设置时，文本将以指定的大小显示，默认为20像素。
+
+\paragraph{underline、strikethrough、bold、italic}
+bold属性用于定义文本是否加粗。它所接受的值应是布尔值。当bold属性的值为True时，文本将以加粗的形式显示。
+
+italic属性用于定义文本是否斜体。它所接受的值应是布尔值。当italic属性的值为True时，文本将以斜体的形式显示。
+
+underline属性用于添加下划线效果。它所接受的值应是布尔值。当underline属性的值为True时，文本将带有下划线效果。
+
+strikethrough属性用于添加删除线效果。它所接受的值应是布尔值。当strikethrough属性的值为True时，文本将带有删除线效果。
+
+\paragraph{kerning}
+kerning属性用于定义相邻字符之间的间距。它接受一个数字，表示字符之间的额外空间。当kerning属性被设置时，文本中的字符之间将根据指定的间距插入空白像素。
+
+\paragraph{outlines}
+outlines属性用于定义文本的轮廓效果。它接受一个列表，每个元素都是一个包含四个值的元组，分别表示字体轮廓线尺寸、颜色、水平偏移和垂直偏移。当outlines属性被设置时，文本将具有指定的轮廓效果，使其在视觉上更加突出。
+
+如下例：
+
+\begin{lstlisting}
+screen my_first_screen():
+    text "这是一个文本组件！" color "#ff0000" kerning 5 outlines [(2, "#db8181", 0, 0)]
+\end{lstlisting}
+
+\paragraph{font}
+font属性用于指定渲染文本所用字体。其接受一个指向字体文件路径的字符串。
+
+如下例：
+\begin{lstlisting}
+screen my_first_screen():
+    text "这是一个文本组件！" font "mod_assets/font/yuri.ttf"
+\end{lstlisting}
+
+\subsubsection{窗口样式特性}
+窗口特性用于指定窗口、框架、按钮的外观。常用的窗口样式特性包括：background、border、padding、margin等，可以使用窗口样式特性的组件包括：window、frame、textbutton等。
+
+\paragraph{background}
+background属性用于定义组件的背景。它接受一个颜色值或图像文件路径。当background属性被设置时，组件将以指定的颜色或图像作为背景显示。
+如下例：
+\begin{lstlisting}
+screen my_first_screen():
+    frame:
+        background "#000000"
+        xysize (300, 300)
+        text "这是一个文本组件！" align (0.0, 0.0)
+\end{lstlisting}
+
+\paragraph{[left|right|top|bottom]\_margin、[x|y]margin}
+margin属性用于定义组件的在各个方向的透明空间量。left\_margin、right\_margin、top\_margin、bottom\_margin属性分别定义组件在左、右、上、下方向的透明空间量，xmargin属性等同于将left\_margin与right\_margin属性的值设置为相同的值，ymargin属性等同于将top\_margin与bottom\_margin属性的值设置为相同的值。
+
+margin属性接受一个二元元组或四元元组。若为二元元组，第一个元素作为xmargin的值，第二个元素作为ymargin的值；若为四元元组，分别作为left\_margin、top\_margin、right\_margin、bottom\_margin属性的值。
+
+如下例：
+\begin{lstlisting}
+screen my_first_screen():
+    frame:
+        background "#000000"
+        xysize (300, 300)
+        margin (20, 20)
+        text "这是一个文本组件！" align (0.0, 0.0)
+\end{lstlisting}
+
+\paragraph{[left|right|top|bottom]\_padding、[x|y]padding}
+padding属性用于定义组件在各个方向上的内边距，即各个组件与窗口内容之间的距离。left\_padding、right\_padding、top\_padding、bottom\_padding属性分别定义组件在左、右、上、下方向上的内边距，xpadding属性等同于将left\_padding与right\_padding属性的值设置为相同的值，ypadding属性等同于将top\_padding与bottom\_padding属性的值设置为相同的值。
+
+padding属性接受一个二元元组或四元元组。若为二元元组，第一个元素作为xpadding的值，第二个元素作为ypadding的值；若为四元元组，分别作为left\_padding、top\_padding、right\_padding、bottom\_padding属性的值。
+
+如下例：
+\begin{lstlisting}
+screen my_first_screen():
+    frame:
+        background "#000000"
+        xysize (300, 300)
+        padding (20, 20)
+        text "这是一个文本组件！" align (0.0, 0.0)
+\end{lstlisting}
+
+运行游戏，我们发现在文本组件不再与窗口边缘直接接触了，而是有了20像素的空白距离。
+
+\subsubsection{网格样式特性}
+网格样式特性用于定义grid组件的布局。其只有三个特性：spacing、xspacing、yspacing。spacing属性定义各单元格之间的距离，单位为像素。xspacing属性定义单元格之间的水平距离，yspacing属性定义单元格之间的垂直距离。xspacing与yspacing属性可以通过spacing属性来简化，如\verb|spacing 10|等同于\verb|xspacing 10 yspacing 10|。
+\subsubsection{方框样式特性}
+方框样式特性用于定义vbox、hbox的布局。常用的特性包括：spacing、box\_reverse等。
+\paragraph{spacing}
+spacing属性用于定义组件在方框中的间距。它接受一个数字，表示组件之间的像素距离。
+
+\paragraph{box\_reverse}
+box\_reverse属性用于定义组件在方框中的排列顺序。它接受一个布尔值，当值为True时，组件将以相反的顺序排列。
+
+对于更多的样式特性，您可以前往\url{https://doc.renpy.cn/zh-CN/style_properties.html}获取更多信息。
+
+\subsection{样式的使用}
+样式可以通过style语句预先定义好，在界面语言中显式使用，也可以像上述方式一样直接在组件中定义样式，还可以通过style\_prefix属性隐式调用。
+
+如下例：
+\begin{lstlisting}
+style my_style_text is default:
+    font "mod_assets/font/yuri.ttf"
+    size 25
+    color "#5eaee7"
+    outlines []
+
+screen my_first_screen():
+    text "这是一个文本组件！" style "my_style_text"
+\end{lstlisting}
+
+这段代码等同于：
+\begin{lstlisting}
+screen my_first_screen():
+    text "这是一个文本组件！" font "mod_assets/font/yuri.ttf" size 25 color "#5eaee7" outlines []
+\end{lstlisting}
+
+也等同于：
+\begin{lstlisting}
+style my_style_text is default:
+    font "mod_assets/font/yuri.ttf"
+    size 25
+    color "#5eaee7"
+    outlines []
+
+screen my_first_screen():
+    style_prefix "my_style"
+    text "这是一个文本组件！"
+\end{lstlisting}
+
+\section{动画与变换语言}
 动画与变换语言（ATL）是Ren'Py界面语言中的一个重要部分，用于定义界面组件的动画效果和变换。通过使用ATL，开发者可以创建丰富多彩的界面动画，提升游戏的视觉体验。
+
+\subsection{ATL语言的结构}
+以模板中定义的一个较为简单的变换为例子：
+\begin{lstlisting}
+transform sticker_left:
+    xcenter 100 yalign 0.9 subpixel True
+\end{lstlisting}
+
+第一行的\verb|transform sticker_left:|定义了一个名为sticker\_left的变换。transform语句用于定义一个新的变换。对于接收参数的transform来说，语法如下：
+
+\begin{lstlisting}
+transform <变换名>(<参数1>, <参数2>, ...):
+    ...
+\end{lstlisting}
+
+第二行的 \verb|xcenter 100 yalign 0.9 subpixel True| 则是该变换的属性。
+
+\subsection{ATL语法及语义}
+ATL语句与界面语言语句的结构相似，都是由一个关键词开头，后面跟着参数。不同的是，ATL语句可以在image、show、scene语句中使用。
+
+常用的ATL语句包括：pause、特性值语句、插值语句等。
+
+\subsubsection{数值语句}
+
+数值语句由一个简单表达式构成，且该表达式最终结果为一个数字。数值语句是pause的简略版，可以暂停固定时间。
+如下例：
+
+\begin{lstlisting}
+transform my_transform:
+    xpos 100
+    pause 3
+    xpos 200
+    3
+    pause 100
+\end{lstlisting}
+
+\subsubsection{特性值语句}
+
+transform同样具有特性，并且特性种类繁多，可分为：坐标特性、旋转特性、翻转缩放特性、裁剪与尺寸特性等。
+
+\paragraph{坐标特性}
+常用的坐标特性包括：[x|y]pos、[x|y]align、[x|y]anchor、[x|y]size、[x|y]offset等。其用法均与位置样式特性中的用法相同，故此处不再重复介绍。
+
+\paragraph{旋转特性}
+旋转特性正如其名，用于定义可视组件的旋转效果。主要特性是rotate、rotate\_pad。
+
+rotate接受一个浮点数，表示旋转的角度，单位为度。请注意在anchor不为(0.5, 0.5)时，rotate可能会让整个组件的相对位置发生改变。
+
+rotate\_pad接受一个布尔值。若该值为True，一个可以旋转的可视组件就会使用原本的宽度和高度填充旋转矩形，并确保旋转时不会改变组件的尺寸。
+
+如下例：
+
+\begin{lstlisting}
+transform my_transform:
+    linear 10 rotate 360
+    rotate_pad True
+
+screen my_first_screen():
+    frame:
+        background "#000000"
+        text "这是一个文本组件！" align (0.0, 0.0) at my_transform
+\end{lstlisting}
+
+运行游戏，我们可以看到文本组件被旋转了360度，并且由于rotate\_pad特性的作用，frame组件明显比文本组件所占用的空间更大，且旋转结束后frame组件的大小不变，这就是rotate\_pad特性创造的一个旋转矩形。而当我们将rotate\_pad属性设置为False时，在旋转结束后，frame组件的大小会恢复到文本组件所占用的空间，并且会导致组件位置的改变。
+
+\paragraph{翻转缩放组件}
+翻转缩放特性用于定义可视组件的翻转和缩放效果，其包含特性：[x|y]zoom。
+
+[x|y]zoom特性用于定义组件在水平方向或垂直方向上的缩放效果，其接受一个浮点数作为缩放比例。xzoom属性定义组件在水平方向上的缩放，yzoom属性定义组件在垂直方向上的缩放，zoom属性则会等比例缩放。
+
+更多的ATL特性，请查阅\url{https://doc.renpy.cn/zh-CN/transform_properties.html}。
+
+\subsubsection{插值语句}
+插值语句用于获取组件从一个状态到另一个状态的动画效果。常用的插值效果包括：pause、linear、easein、easeout、ease等。
+
+\begin{center}
+    % \tablefirsthead{
+    %     \hline
+    %     \multicolumn{1}{|c}{操作符}
+    %     \multicolumn{1}{|c|}{描述}
+    %     \multicolumn{1}{c|}{示例}
+    %     \hline
+    % }
+    \tablehead{
+    \hline
+    插值函数 & 描述\\
+    \hline
+    }
+    \tabletail{\hline}
+    \tablelasttail{\hline}
+    \tablecaption{插值语句预定义好的插值函数}
+    \begin{supertabular}{|c|c|}
+        \hline
+        pause & 暂停一段时间，然后直接进入下一阶段。\\
+        \hline
+        linear & 以线性方式从一个状态过渡到另一个状态。\\
+        \hline
+        ease & 以开头慢，中间加速，然后又减速的方式从一个状态过渡到另一个状态。\\
+        \hline
+        easein & 以开头快，然后减速的方式从一个状态过渡到另一个状态。\\
+        \hline
+        easeout & 以开头慢，然后加速的方式从一个状态过渡到另一个状态。\\
+    \end{supertabular}
+\end{center}
+
+
+插值语句的用法如下：
+\begin{lstlisting}
+transform my_transform:
+    align (0.0, 0.0)
+    linear 3 align (0.5, 0.5)
+    ease 5 rotate 35
+\end{lstlisting}
+
+\subsubsection{pass}
+pass语句用于在transform中占位。它没有实际的作用，主要充当占位符的作用。
+
+\subsubsection{repeat}
+repeat语句用于重复执行transform中的ATL语句块。当代码顺序执行到repeat时，会返回到包含repeat的语句块的开头。
+
+repeat语句接受一个参数，表示重复的次数。当不传入repeat任何参数时，transform中的ATL语句块将会无限重复执行。
+
+\subsubsection{block}
+block语句用于在transform中创造一个ATL语句块，主要与repeat结合，隔离出需要重复执行的ATL语句。
+如下例：
+
+\begin{lstlisting}
+transform my_transform:
+    align (0.0, 0.0)
+    zoom 0.7
+    block:
+        linear 3 align (0.5, 0.5)
+        ease 5 rotate 35
+        repeat 2
+\end{lstlisting}
+
+\subsubsection{parallel}
+parallel语句用于在transform中创造一个并行执行的ATL语句块。parallel语句块中的ATL语句将会同时执行，而不是像普通的ATL语句块那样顺序执行。
+
+如下例：
+
+\begin{lstlisting}
+transform my_transform:
+    align (0.0, 0.0)
+    parallel:
+        linear 3 xalign 0.5
+        linear 3 xalign 0.0
+    parallel:
+        linear 3 yalign 0.5
+        linear 3 yalign 0.0
+\end{lstlisting}
+
+两个parallel语句块中的内容会同步执行。
+
 
 \end{document}
