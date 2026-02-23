@@ -1,0 +1,69 @@
+\documentclass[../../Main.tex]{subfiles}
+\begin{document}
+\section{添加多语言支持}
+对于Ren'Py 8与Future分支用户来说，您可以跳过此部分内容，因为在Future分支中已内建多语言支持。
+
+对于Ren'Py 7用户，您需要将Future分支中的部分代码移植到您的项目中，以实现多语言支持。
+
+打开screens.rpy文件，在第一行\verb|init offset = -1|下添加以下代码：
+\begin{lstlisting}
+init python:
+    def scan_translations():
+
+        languages = renpy.known_languages()
+
+        if not languages:
+            return None
+
+        rv = [(i, renpy.translate_string("{#language name and font}", i)) for i in languages ]
+        rv.sort(key=lambda a : renpy.filter_text_tags(a[1], allow=[]).lower())
+
+        rv.insert(0, (None, "简体中文"))
+
+        bound = math.ceil(len(rv)/2.)
+
+        return (rv[:bound], rv[bound:2*bound])
+
+default translations = scan_translations()
+\end{lstlisting}
+
+然后，按住Ctrl + F打开搜索框，输入“选择选项之后”，另起一行，输入以下代码（注意缩进，第一行if语句应与上一段落的vbox在同一缩进级别）：
+\begin{lstlisting}
+                if translations:
+                    vbox:
+                        style_prefix "radio"
+                        label _("语言")
+                        hbox:
+                            viewport:
+                                mousewheel True
+                                scrollbars "vertical"
+                                ysize 100
+                                has vbox
+
+                                for tran in translations:
+                                    vbox:
+                                        for tlid, tlname in tran:
+                                            textbutton tlname:
+                                                action Language(tlid)
+\end{lstlisting}
+
+\section{生成翻译文件}
+打开Ren'Py SDK，选中您的项目，在右侧操作栏中点击生成翻译，输入语言名字，例如：\verb|mylanguage|，点击生成翻译文件。稍等片刻，您便会在game/tl/目录下看到一个名为mylanguage的文件夹，其中包含了多个rpy文件，依次点开，对照old的内容将其中的文本翻译成您需要的语言，填在new里，保存。
+
+然后，打开对应语言文件夹下的screens.rpy，在第一行\verb|translation|后另起一行添加以下代码：
+
+\begin{lstlisting}
+    old "{#language name and font}"
+    new "<您的语言名称>"
+\end{lstlisting}
+
+例如：
+
+\begin{lstlisting}
+    old "{#language name and font}"
+    new "My Language"
+\end{lstlisting}
+
+最后重新运行游戏，您就可以在游戏中设置菜单选择新的语言了。
+
+\end{document}

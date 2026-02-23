@@ -1,0 +1,51 @@
+\documentclass[../../Main.tex]{subfiles}
+\begin{document}
+\section{设置Python环境}
+对于Ren'Py 7与Ren'Py 8，由于两者的Python大版本号不同，因此需要安装不同的Python版本。对于Ren'Py 7，您需要安装Python 2.7；对于Ren'Py 8，您需要安装Python 3.9或更高版本。
+
+为了方便管理不同版本的Python，您可以使用conda来创建、管理不同的Python环境。在本节中我们将会以Miniconda为例来介绍如何搭建起Python开发环境。
+
+\subsection{安装Miniconda与Python环境}
+前往\url{https://www.anaconda.com/download/success}，选择您的操作系统，下载Miniconda安装包，按照默认设置无需调整完成安装。
+
+
+在安装完成后，打开开始菜单，您应该会在“Anaconda”文件夹中看到“Anaconda Command Prompt”。点击打开它，您将进入一个命令行界面，您可以在这里输入conda命令来管理您的Python环境。
+
+\subsubsection{对于Ren'Py 7}
+对于Ren'Py 7的用户，由于Ren'Py 7使用的Python版本为Python 2.7.18，因此我们需要额外安装Python 2.7环境。
+
+打开“Anaconda Command Prompt”，输入以下命令来创建一个名为\verb|renpy7|的Python 2.7环境：
+\begin{verbatim}
+    conda create -n renpy7 python=2.7
+\end{verbatim}
+
+过程中可能会提示是否接受服务条款，按照提示输入a（Accept）接受即可。
+
+等待环境创建完成后，输入以下命令来激活\verb|renpy7|环境：
+\begin{verbatim}
+    conda activate renpy7
+\end{verbatim}
+
+\subsubsection{对于Ren'Py 8}
+对于Ren'Py 8的用户，由于Ren'Py SDK的Python版本与上游同步，您可以按照以下方法查看Python版本号：
+\begin{enumerate}
+    \item 打开Ren'Py SDK，在Ren'Py SDK主界面中按下Shift + O进入Ren'Py控制台界面；
+    \item 输入\verb|import sys; sys.version|，此时会输出一段形如“3.14.3 (main, Feb 13 2026, 15:31:44) [GCC 15.2.1 20260209]”的文本，其中“3.14.3”就是当前Ren'Py SDK所使用的Python版本。
+\end{enumerate}
+
+\subsection{进入Python环境}
+在安装完Miniconda并创建了相应的Python环境后，打开Anaconda Command Prompt，对于Ren'Py 7用户您还需要激活renpy7环境。然后，在命令行中输入\verb|python|，您将进入Python交互式环境，在这里您可以输入Python代码并立即看到结果。
+
+\subsection{安装第三方库}
+在Python中，您可以使用pip工具来安装第三方库。pip是Python的包管理工具，可以帮助您轻松地安装和管理Python包。
+
+在Anaconda Command Prompt中，输入以下命令来安装一个名为\verb|requests|的第三方库：
+\begin{verbatim}
+    pip install requests
+\end{verbatim}
+
+等待安装完成后，您就可以在Python中使用\verb|requests|库了。例如，在Python交互式环境中输入以下代码来测试是否安装成功：
+\begin{verbatim}
+    import requests
+\end{verbatim}
+\end{document}

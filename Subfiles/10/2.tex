@@ -1,0 +1,76 @@
+\documentclass[../../Main.tex]{subfiles}
+\begin{document}
+\section{Python内置函数与第一方库}
+在Python中内建了许多实用的函数与库，能够帮助我们以更简单的方式实现一些功能。在本节中，我们将学习一些Python中常用的函数与第一方库。
+
+\subsection{Python内置函数}
+常用的Python内置函数包括但不限于：max、min、len、range、type、isinstance等，接下来让我们了解每一个函数的用法与作用。
+
+\subsubsection{max、min}
+max函数用于返回一个可迭代对象中的最大值，而min函数则用于返回一个可迭代对象中的最小值。例如：
+\begin{lstlisting}
+numbers = [1, 5, 4, 3, 2]
+print(max(numbers))   %\Output{5}%
+print(min(numbers))   %\Output{1}%
+\end{lstlisting}
+
+\subsubsection{len}
+len函数用于返回一个对象（如字符串、列表、元组等）的长度或个数。例如：
+\begin{lstlisting}
+my_list = [1, 2, 3, 4, 5]
+print(len(my_list))   %\Output{5}%
+
+my_string = "Hello, World!"
+print(len(my_string))   %\Output{13}%
+\end{lstlisting}
+
+\subsubsection{range}
+range函数用于生成一个整数序列，其用法在\ref{Extra:3.5.3}中有详细介绍，此处不再重复介绍。
+
+\subsubsection{type、isinstance}
+type函数用于返回一个对象的类型，而isinstance函数用于检查一个对象是否是某个特定类型的实例。例如：
+\begin{lstlisting}
+x = 10
+print(type(x))   %\Output{<class 'int'>}%
+print(isinstance(x, int))   %\Output{True}%
+print(isinstance(x, str))   %\Output{False}%
+\end{lstlisting}
+
+\subsubsection{int、float、str、bool}
+int、float、str与bool都是Python内置的数据类型转换函数。int用于将一个字符串、浮点数转换为整数，float用于将一个字符串、整数转换为浮点数，str用于将一个对象转换为字符串，而bool用于将一个对象转换为布尔值。例如：
+\begin{lstlisting}
+print(int("123"))   %\Output{123}%
+print(float("3.14"))   %\Output{3.14}%
+print(str(123))   %\Output{'123'}%
+print(bool(0))   %\Output{False}%
+print(int("123") + 1)   %\Output{124}%
+\end{lstlisting}
+
+\subsection{Python第一方库}
+Python的第一方库是由Python官方维护和提供的库，包含了许多实用的功能模块，如math、datetime、os、sys等。接下来我们将介绍一些常用的第一方库及其功能。通过import语句，我们可以导入这些库并使用其中的函数和类来实现各种功能。
+\subsubsection{math库}
+math库提供了许多数学函数和常量，如sin、cos、tan、pi等。例如：
+\begin{lstlisting}
+import math
+print(math.sin(math.pi / 2))   %\Output{1.0}%
+print(math.cos(0))   %\Output{1.0}%
+print(math.tan(math.pi / 4))   %\Output{1.0}
+\end{lstlisting}
+
+\subsubsection{os库}
+os库提供了许多与操作系统交互的功能，如获取当前工作目录、列出目录内容等。例如：
+\begin{lstlisting}
+import os
+print(os.getcwd())   %\Output{当前工作目录路径}%
+print(os.listdir())   %\Output{当前目录下的文件和文件夹列表}%
+\end{lstlisting}
+
+同时也包括对文件的一些操作，如删除文件、重命名文件等。例如：
+
+\begin{lstlisting}
+import os
+os.remove("example.txt")   %\Output{删除名为example.txt的文件}%
+os.rename("old_name.txt", "new_name.txt")
+\end{lstlisting}
+
+\end{document}
