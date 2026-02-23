@@ -128,7 +128,7 @@ screen my_first_screen():
     call screen my_first_screen
 \end{lstlisting}
 
-在这里，您同样可以使用show screen my\_first\_screen来显示该界面。call screen语句会暂停当前的游戏流程，显示指定的界面，并在该界面关闭后返回到暂停的位置继续游戏。而show screen语句则会在不暂停游戏流程的情况下显示指定的界面，允许游戏继续进行，同时界面保持可见。由于我们希望在游戏结束时显示这个界面并等待其关闭后再继续，所以这里使用call screen更为合适。
+在这里，您同样可以使用show screen my\_first\_screen来显示该界面。call screen语句会暂停当前的游戏流程，显示指定的界面，并在该界面关闭后返回到暂停的位置继续游戏。而show screen语句则会在不暂停游戏流程的情况下显示指定的界面，允许游戏继续进行，同时界面保持可见。由于我们希望在选项前显示这个界面并等待其关闭后再继续，所以这里使用call screen更为合适。
 
 在本例中，使用show screen my\_first\_screen语句将会导致自定义界面与选项界面重叠。而使用call screen my\_first\_screen语句则会暂停游戏进度显示自定义界面，在自定义界面关闭后再显示选项界面。
 
@@ -245,8 +245,6 @@ repeat特性用于指定定时器是否重复执行。
 
 modal特性用于指明当处于模态界面时timer计时器的行为。
 
-对于更多的界面组件，您可以前往\url{https://doc.renpy.cn/zh-CN/screens.html}获取更多信息。
-
 \subsubsection{图像组件}
 
 图像组件使用add语句进行添加，如下例：
@@ -255,6 +253,8 @@ screen image_screen():
     add "bg club_day"
     add "monika 1a" at t11
 \end{lstlisting}
+
+对于更多的界面组件，您可以前往\url{https://doc.renpy.cn/zh-CN/screens.html}获取更多信息。
 
 \subsection{界面行为}
 在界面语言中，我们常常见到action后跟了一些Python函数。例如上面例子中的\verb|Notify()|、\verb|Return()|等。这些就被称为界面行为。
@@ -328,8 +328,6 @@ Quit将会退出游戏。其接受一个confirm参数，同MainMenu相同。
 \paragraph{Start}
 Start会跳转到指定脚本标签处。默认为start标签。
 
-更多的界面行为，可以参考\url{https://doc.renpy.cn/zh-CN/screen_actions.html}。
-
 \subsubsection{其他行为}
 其他行为包括：If、Function、Confirm等。
 \paragraph{If}
@@ -348,6 +346,8 @@ Confirm会显示一个确认菜单，其与renpy.confirm函数行为相同。
 Confirm接受4个参数，我们主要关注3个：prompt、yes、no。
 
 prompt参数是向用户显示的提示内容，yes则为用户点击是所执行的行为，否则执行no的行为。no默认参数为None
+
+更多的界面行为，可以参考\url{https://doc.renpy.cn/zh-CN/screen_actions.html}。
 
 \section{样式}
 样式（style）是Ren'Py界面中一种特殊的特性，用于定义界面组件的外观和布局。

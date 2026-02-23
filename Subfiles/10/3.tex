@@ -1,0 +1,28 @@
+\documentclass[../../Main.tex]{subfiles}
+\begin{document}
+\section{在Ren'Py中使用Python第三方库}
+
+在Ren'Py中，内置了一些Python第一方库，例如：string、math、datetime等。对于Python第三方库，Ren'Py也提供了支持，需要注意的是，Ren'Py使用第三方库的方法与Python有一定的区别。
+
+在Ren'Py中，安装Python第三方库同样是使用pip工具安装，但是需要在游戏环境下安装。
+
+首先，打开Anaconda Command Prompt，对于Ren'Py 7用户，您还需要激活renpy7环境。然后，在Ren'Py SDK中选中您的项目，在右侧选项中选择game，此时Ren'Py SDK会打开游戏根目录。
+
+点击地址栏，全选复制当前目录，然后在Anaconda Command Prompt中输入以下命令：
+\begin{verbatim}
+    cd "复制的目录"
+    pip install --target "game/python-packages" 第三方库名称
+\end{verbatim}
+
+对于项目与Ren'Py SDK不在同一分区的Windows用户，您还需要先切换到项目所在分区，例如：\verb|D:|，然后再执行上述命令。
+
+例如，如果您的项目根目录为\verb|D:\Projects\AAA|，想安装requests库，可以输入以下命令：
+\begin{verbatim}
+    D:\
+    cd "D:\Projects\AAA"
+    pip install --target "game/python-packages" requests
+\end{verbatim}
+
+安装完成后，您就可以在Ren'Py中使用该第三方库了。在Ren'Py中，您需要在Python代码块中使用import导入库。
+
+\end{document}
