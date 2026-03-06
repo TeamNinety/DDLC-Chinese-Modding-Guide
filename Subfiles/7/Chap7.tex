@@ -32,10 +32,30 @@
 若以上三个条件均满足，我们建议您升级到Future分支。您也可以出于尝试目的升级您的项目，只要先进行备份。
 
 \section{更新Ren'Py版本与模板版本}
+
+感谢EightDays\_TPI（8天67t9）对于本章内容的贡献。
+
+在开始前，您需要注意的是：
+
+根据Github上NVIDIA玩家的反馈，在运行Ren'Py 8.0.3 到 8.2.3版本所生成的游戏时遇到了崩溃的问题。8天67t9指出也有玩家反映在Ren'Py 8.3.7上运行同样遇到了崩溃的问题。由于本人使用NVIDIA RTX 3060 驱动版本591.44上并没有遇到此错误，无法验证该问题。根据Github Issuse，Ren'Py 8.5.2中修复了此问题。
+
+8天67t9同样指出Ren'Py 7与8的早期版本在安卓移植部分存在严重问题，同样是在Ren'Py 8.5.2中修复了此问题。
+
+因此，如果您满足以下条件，我们推荐您升级至Ren'Py 8.5.2或更高版本：
+\begin{itemize}
+    \item 您使用NVIDIA显卡且遇到了闪退问题；
+    \item 您有安卓移植的需要；
+\end{itemize}
+
+否则，我们推荐您使用Ren'Py 8.0.3 或 8.3.7版本。
+
+对于一般用户，由于4.0与5.0版本目前稳定性存疑，我们建议您使用2.0分支+Ren'Py 8的组合，请参考\ref{subsec:7.4}的内容。
+
+
 在一切开始之前，请先对您现在的项目文件夹进行备份，只需将您的项目文件夹压缩成压缩包或复制一份即可。
 
 \begin{Warning}
-    截止到本章编写时，Ren'Py 7的支持即将结束，故我们建议您直接升级至Future分支与Ren'Py 8版本，而不是停留在Ren'Py 7。
+    截止到本章编写时，Ren'Py 7的支持已经结束，故我们建议您直接升级至Ren'Py 8版本，而不是停留在Ren'Py 7。
 \end{Warning}
 
 \subsection{更新Ren'Py}
@@ -76,11 +96,69 @@
 
 这个提示将会在初次运行时出现，原则上当您按照本书的打包教程，将config.developer设置为False，那么这个提示将不会被展示。但以防万一，我们仍建议您从根源上取消该提示。
 
-现在，关闭游戏，打开game/core/lockdown\_check.rpy文件，在label语句后添加一行，输入以下代码（注意缩进）：
+现在，关闭游戏，找到并打开lockdown\_check.rpy文件，在\verb|label lockdown_check:|语句后添加一行，输入以下代码（注意缩进）：
 \begin{lstlisting}
     return
 \end{lstlisting}
 
 再次打开游戏，您会发现这段提示永久消失了。
+
+\subsection{在Next分支上使用Ren'Py 8}
+\label{subsec:7.4}
+由于4.0与5.0版本目前稳定性存疑，对于Next分支的用户，我们推荐您在升级到Ren'Py 8 的同时继续使用2.0模板进行开发。但是在开发前，为了给Next分支添加Ren'Py 8支持，我们需要对模板进行一些修改。
+
+首先下载Future分支（4.0版本），将Future分支game文件夹下的definitions/effects.rpy与poem\_game/script-poemgame.rpy文件覆盖到Next分支的game/文件夹下。
+
+然后打开script-poemgame.rpy文件，在文件中将
+
+\verb|poem_txt = "poem_game/poemwords.txt"|
+
+替换为
+
+\verb|poem_txt = "poemwords.txt"|
+
+打开definitions.rpy文件，在\verb|python early:|语句下添加以下代码（注意缩进）：
+\begin{lstlisting}
+    import math
+\end{lstlisting}
+
+然后，按照上一节的内容解除兼容性警告。
+
+对于一些用户来说，可能会在打包时遇到一些问题，这是由于Ren'Py 的打包机制所导致，需要对模板的打包方式进行修改。
+
+打开game/options.rpy文件，将以下内容
+\begin{lstlisting}
+    build.classify("game/mod_assets/**", "mod_assets all")
+    build.classify("game/gui/**", "mod_assets all")
+    build.classify("game/images/**", "mod_assets all")
+    build.classify("game/**.rpyc", "scripts all")
+    build.classify("game/README.txt", None)
+    build.classify("game/**.txt", "scripts all")
+    build.classify("game/**.chr", "scripts all")
+    build.classify("game/advanced_scripts/**","scripts all")
+    build.classify("game/tl/**", "scripts all") \#\# Translation Folder
+    build.classify("game/tutorial_route_answer/**", None)
+\end{lstlisting}
+
+替换为以下内容：（注意缩进）
+\begin{lstlisting}
+    # Scripts
+    build.classify("game/**.rpyc", "scripts all")
+    build.classify("game/**.py", "scripts all")
+    build.classify("game/**.pyc", "scripts all")
+    build.classify("game/tl/**", "scripts all") \#\# Translation Folder
+    build.classify("game/**.txt", "scripts all")
+    build.classify("game/**.chr", "scripts all")
+
+    # Mod Assets
+    build.classify("game/mod_assets/**", "mod_assets all")
+    build.classify("game/gui/**", "mod_assets all")
+    build.classify("game/images/**", "mod_assets all")
+\end{lstlisting}
+
+对于一些中文用户，若您的用户名为中文，可能会遇到存档问题，对此的修复也很简单。打开definitions.rpy文件，在\verb|python early:|语句下添加以下代码（注意缩进）：
+\begin{lstlisting}
+    config.savedir = config.save_directory
+\end{lstlisting}
 
 \end{document}
