@@ -63,4 +63,20 @@ DDLC Mod模板是由GanstaKingofSA编写的一个方便开发Mod的模板。imgr
 \end{figure}
 若您打开 Visual Studio Code 时出现如图\ref{fig:2.1.2.2}所示的提示框，请点击“是，我信任此作者”。
 
+在Windows 10 21H1及更高版本中，Microsoft弃用了wmic，导致模板的蓝屏模块无法使用进而导致游戏无法启动。如果您遇到了这个问题，请按照以下步骤操作：
+
+打开game/bsod.rpy文件，在第54行中将以下代码：
+\begin{lstlisting}
+    if renpy.windows:
+        osName = subprocess.check_output("wmic os get version", shell=True).replace("\r", "").replace(" ", "").replace("\n", "").replace("Version ", "")
+\end{lstlisting}
+
+替换为:
+
+\begin{lstlisting}
+    if renpy.windows:
+        import platform
+        osName = platform.win32_ver()[1]
+\end{lstlisting}
+
 \end{document}
