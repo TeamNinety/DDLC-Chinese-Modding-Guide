@@ -20,7 +20,7 @@
 \newcommand{\thechapterspacebelow}{}
 \newcommand{\chapterspacebelow}[1]{\renewcommand{\thechapterspacebelow}{#1}}
 
-\chapterimage{Pictures/chapter.png} % Chapter heading image
+% \chapterimage{Pictures/chapter.png} % Chapter heading image
 \definecolor{ocre}{RGB}{3, 136, 252} % Define the color used for highlighting throughout the book
 % Set Default Fonts
 
@@ -34,8 +34,11 @@
 
 \setlength{\headheight}{13pt}
 
-\chapterspaceabove{6.5cm} % Default whitespace from the top of the page to the chapter title on chapter pages
-\chapterspacebelow{6.75cm} % Default amount of vertical whitespace from the top margin to the start of the text on chapter pages
+\chapterspaceabove{3.5cm} % Default whitespace from the top of the page to the chapter title on chapter pages
+\chapterspacebelow{3.5cm} % Default amount of vertical whitespace from the top margin to the start of the text on chapter pages
+
+% \chapterspaceabove{0cm} % Default whitespace from the top of the page to the chapter title on chapter pages
+% \chapterspacebelow{0cm} % Default amount of vertical whitespace from the top margin to the start of the text on chapter pages
 
 % Set the style
 \geometry{
@@ -101,6 +104,7 @@
 				inner sep=0pt, % Inner padding
 			] at (current page.north west) {\includegraphics[width=\paperwidth]{\thechapterimage}};
 		}
+		\node[anchor=north, rectangle, fill=ocre!10, inner sep=0pt, minimum height=7.5cm, minimum width=\paperwidth] at (current page.north) {}; % Background color
 		% Box with the chapter title
 		\draw[anchor=west] (current page.north west) node [
 			anchor=north west, % Anchor point of the chapter box
@@ -268,7 +272,7 @@
 \newcommand{\UserInput}[1]{\textbf{\#输入：#1}}
 \newcommand{\Output}[1]{\textit{\#输出：#1}}
 \newcommand{\PyOnly}{\textbf{[Python Only]}}
-\newcommand{\version}{1.1.1}
+\newcommand{\version}{1.1.2}
 \newenvironment{ChapterGoals}{\textbf{本章目标包括：}\FZFangSong}{\par}
 
 % Define the color box
