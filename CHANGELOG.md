@@ -1,3 +1,4 @@
-2025/3/6
+2025/5/1
 
-Updated Chapter 7 (Thanks to EightDays_TPI)
+Edited content about IP Guidelines.
+Edited images to obey the new IP Guidelines.
