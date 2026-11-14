@@ -1,0 +1,60 @@
+\documentclass[../../Main.tex]{subfiles}
+\begin{document}
+\section{界面语言}
+界面语言是定义一个用户接口最正式的办法。它包含定义新界面的语句（screen语句）、添加可视组件至界面的语句和控制型语句。
+
+\subsection{初步了解界面语言的结构}
+
+以模板内定义的say界面为例：
+\begin{lstlisting}
+screen say(who, what):
+    style_prefix "say"
+
+    window:
+        id "window"
+
+        text what id "what"
+
+        if who is not None:
+
+            window:
+                style "namebox"
+                text who id "who"
+
+    # 如果有对话框头像，会将其显示在文本之上。请不要在手机界面下显示这个，因为
+    # 没有空间。
+    if not renpy.variant("small"):
+        add SideImage() xalign 0.0 yalign 1.0
+
+    use quick_menu
+\end{lstlisting}
+
+首先，第1行的“screen say(who, what):”定义了一个名为say的界面，并且该界面在调用时接受两个参数：who与what。screen是最基础也是最重要的一个界面语言语句，用于定义新界面。screen语句接受一个参数，即界面名，同时可以在界面名后用英文括号定义这个界面所接受的参数。转换为代码如下形式：
+\begin{lstlisting}
+# 接受参数
+screen <界面名>(<参数1>, <参数2>, ...):
+    ...
+# 不接受参数
+screen <界面名>:
+    ...
+\end{lstlisting}
+
+第2行的“style\_prefix "say"”，是screen语句的一个特性，包括特性名称和特性值，特性值是简单表达式。“style\_prefix”是特性名称，“"say"”则是特性值。该语句表示在该界面内的所有组件的样式（style），都以“say”为前缀。例如，第七行的“text”组件，将会默认使用“say\_text”这个样式，除非通过style参数重新指定一个样式。
+
+\begin{ExtraKnowledge}
+    事实上，该组件所用样式应为say\_text，但由于修改组件id特性为“what”，Ren'Py内部使用say\_dialogue替代say\_text。无论如何请记住，style\_prefix效果如它的字面意思一样。
+\end{ExtraKnowledge}
+
+第4、7、11、13、18行，分别向这个界面中添加了不同的组件。由此可见，大多数界面语言语句使用通用的语法。语句的开头以某个关键词进入。如果语句使用参数，参数就跟着开头的关键词后面，参数列表是使用空格分隔的简单表达式。同时，后面一般会跟一个特性（property）列表，多个同级特性组成一个特性列表，特性列表中各个特性使用空格分隔。例如，第7行的text组件，将参数what作为text组件的参数，id则是text组件的一个特性，"what"代表着这是这个特性的值。
+
+
+第1、4、11行，screen语句和window组件后面跟着一个英文冒号，代表该组件是一个语句块（Block）。多个同一等级的语句组成一个语句块。语句块的内容可以是以下内容：
+
+\begin{itemize}
+    \item 特性列表；
+    \item 界面语言。
+\end{itemize}
+
+例如，第1行后的所有组件，都是screen语句下的代码块；第7行的text组件，是在window组件下的语句块，可以理解为text组件被包含在window组件内。
+
+\end{document}

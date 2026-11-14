@@ -1,28 +1,226 @@
 \ProvidesPackage{MyStyle}
 
 % Import packages
-\RequirePackage{makeidx, bookmark, geometry, fancyhdr, tcolorbox, graphicx, float, subfig, enumitem, caption, supertabular, tikz, fontspec, xparse, hyperref, graphicx}
+\RequirePackage{makeidx, bookmark, geometry, fancyhdr, tcolorbox, graphicx, float, subfig, enumitem, caption, supertabular, tikz, fontspec, xparse, hyperref, graphicx, titletoc}
 \RequirePackage[dvipsnames]{xcolor}
 \RequirePackage[fontset=none,scheme=chinese,heading=true]{ctex}
-\RequirePackage{ruby, wallpaper}
+\RequirePackage{ruby, wallpaper, indentfirst}
+\setlength{\parindent}{2em}
+% Command to store the current chapter image to use for all future chapters, can be changed any time in the document and can be empty
+\newcommand{\thechapterimage}{}
+\newcommand{\chapterimage}[1]{\renewcommand{\thechapterimage}{#1}}
+
+% Command to store the current whitespace above the chapter title box for all future chapters, can be changed at any time in the document
+\newcommand{\thechapterspaceabove}{}
+\newcommand{\chapterspaceabove}[1]{\renewcommand{\thechapterspaceabove}{#1}}
+
+% Command to store the current whitespace below the chapter title box for all future chapters, can be changed at any time in the document
+\newcommand{\thechapterspacebelow}{}
+\newcommand{\chapterspacebelow}[1]{\renewcommand{\thechapterspacebelow}{#1}}
+
+\chapterimage{Pictures/Cover/chapter.png} % Chapter heading image
+\definecolor{ocre}{RGB}{3, 136, 252} % Define the color used for highlighting throughout the book
+% Set Default Fonts
+\setCJKmainfont{Noto Serif CJK SC}[ItalicFont=FZKai-Z03]
+\setCJKsansfont{Noto Sans CJK SC}[ItalicFont=FZKai-Z03]
+\setCJKmonofont{Sarasa Term SC}
+
+\setmainfont{Noto Serif}
+\setsansfont{Noto Sans}
+\setmonofont{Sarasa Term SC}
+
+\setlength{\headheight}{13pt}
+
+\chapterspaceabove{6.5cm} % Default whitespace from the top of the page to the chapter title on chapter pages
+\chapterspacebelow{6.75cm} % Default amount of vertical whitespace from the top margin to the start of the text on chapter pages
 
 % Set the style
-\geometry{a4paper,left=1.25in,right=1.25in,top=1in,bottom=1in}
+\geometry{
+	top=3cm, % Top margin
+	bottom=2.5cm, % Bottom margin
+	inner=3cm, % Inner margin (left on odd pages, right on even or left in oneside mode)
+	outer=3cm, % Outer margin (right on odd pages, left on even or right in oneside mode)
+	headsep=10pt, % Space from the top margin to the baseline of the header
+	headheight=0.5cm, % Header height
+	footskip=1.4cm, % Space from the bottom margin to the baseline of the footer
+	columnsep=1cm, % Horizontal space between columns when in two column mode
+	%showframe, % Uncomment to show how the type block is set on the page
+}
+
 \renewcommand{\listtablename}{表格列表}
 \ctexset{
 	section/titleformat = \raggedright
 }
 
-% Set Default Fonts
-\setCJKmainfont{思源宋体}[ItalicFont=方正楷体_GBK]
-\setCJKsansfont{思源黑体}[ItalicFont=方正楷体_GBK]
-\setCJKmonofont{思源等宽}[BoldFont=思源等宽 Bold, ItalicFont=方正楷体_GBK]
+% Set page style.
+\pagestyle{fancy}
 
-\setmainfont{Source Serif 4 Display}[ItalicFont=SourceSerif4Display-It]
-\setsansfont{Source Sans 3}[ItalicFont=SourceSans3-It]
-\setmonofont{Hack}[BoldFont=Hack-Bold, ItalicFont=Hack-Italic]
+\definecolor{ocre}{RGB}{3, 136, 252} % Define the color used for highlighting throughout the book
 
-\setlength{\headheight}{13pt}
+\usepackage[
+	explicit, % Specify section names explicitly in \titleformat with #1
+	newparttoc, % Required for writing the part toc entry number in a standard way (overriding default LaTeX behavior) so the titletoc package can style it
+]{titlesec} % Required for modifying sections
+
+%-------------------------------------------
+
+% Command to create and output the parts pages
+\newcommand{\outputpartpage}[2]{
+	\begin{tikzpicture}[remember picture, overlay]
+		\node[anchor=center, rectangle, fill=ocre!20, inner sep=0pt, minimum height=\paperheight, minimum width=\paperwidth] at (current page.center) {}; % Background color
+		\node[anchor=north west, inner sep=0pt, xshift=\Gm@lmargin, yshift=-\Gm@tmargin] at (current page.north west) {\fontsize{220pt}{220pt}\selectfont\sffamily\bfseries\textcolor{ocre!40}{#1}}; % Part number
+		\node[anchor=north east, inner sep=0pt, xshift=-\Gm@rmargin, yshift=-\Gm@tmargin] at (current page.north east) {\fontsize{30pt}{30pt}\selectfont\sffamily\bfseries\textcolor{white}{\strut #2}}; % Part title
+		\node[anchor=south east, inner sep=0pt, xshift=-\Gm@rmargin, yshift=\Gm@bmargin] at (current page.south east) { % Mini table of contents
+			\parbox[t][][t]{8.5cm}{ % Width of box holding the mini ToC
+				\printcontents[part]{l}{0}{\setcounter{tocdepth}{1}} % Display the mini table of contents showing chapters and sections, change tocdepth to 2 to also show subsections or 0 to only show chapters
+			}
+		};
+	\end{tikzpicture}
+}
+
+\titleformat
+	{\part} % Section type being modified
+	[block] % Shape type, can be: hang, block, display, runin, leftmargin, rightmargin, drop, wrap, frame
+	{\startcontents[part]\outputpartpage{\thepart}{#1}} % Format of the whole section
+	{} % Format of the section label
+	{0em} % Space between the title and label
+	{} % Code before the label
+	[] % Code after the label
+
+% Command to output the chapter title with optional background image
+\newcommand{\outputchaptertitle}[2]{
+	\begin{tikzpicture}[remember picture,overlay]
+		% If a chapter image has been specified
+		\expandafter\ifstrequal\expandafter{\thechapterimage}{}{}{
+			% Output the chapter image
+			\node[
+				anchor=north west, % Anchor point on the image
+				inner sep=0pt, % Inner padding
+			] at (current page.north west) {\includegraphics[width=\paperwidth]{\thechapterimage}};
+		}
+		% Box with the chapter title
+		\draw[anchor=west] (current page.north west) node [
+			anchor=north west, % Anchor point of the chapter box
+			xshift=\Gm@lmargin, % Horizontal distance from the left side of the page
+			yshift=-\thechapterspaceabove, % Vertical distance from the top of the page
+			line width=2pt, % Border line thickness
+			rounded corners=10pt, % Rounded corners amount
+			draw=ocre, % Border line color
+			fill=black!5, % Box background color
+			fill opacity=0.6, % Background transparency
+			text opacity=1, % Text transparency
+			inner ysep=12.5pt, % Inner vertical padding
+			inner xsep=20pt, % Inner horizontal padding
+			align=flush left, % Text alignment inside box
+			text width=1.2\linewidth, % Box width (wider than page to go off the right side)
+			font=\huge\sffamily\bfseries, % Font styling for chapter title
+		] {\parbox{0.85\linewidth}{\strut\raggedright\expandafter\ifstrequal\expandafter{#1}{}{}{#1. }#2\vspace{-3pt}}}; % Chapter title in a fixed width box for wrapping
+	\end{tikzpicture}
+}
+
+% Numbered chapters
+\titleformat
+	{\chapter} % Section type being modified
+	[block] % Shape type, can be: hang, block, display, runin, leftmargin, rightmargin, drop, wrap, frame
+	{\outputchaptertitle{\thechapter}{#1}} % Format of the whole section
+	{} % Format of the section label
+	{0cm} % Space between the title and label
+	{} % Code before the label
+	[\indent] % Code after the label
+
+% Unnumbered chapters
+\titleformat
+	{name=\chapter, numberless} % Section type being modified
+	[block] % Shape type, can be: hang, block, display, runin, leftmargin, rightmargin, drop, wrap, frame
+	{\outputchaptertitle{}{#1}} % Format of the whole section
+	{} % Format of the section label
+	{0cm} % Space between the title and label
+	{} % Code before the label
+	[\indent] % Code after the label
+
+\titlespacing*{\chapter}{0pt}{0pt}{\thechapterspacebelow} % Spacing around section titles, the order is: left, before and after
+
+%-------------------------------------------
+
+\titleformat
+	{\section} % Section type being modified
+	[block] % Shape type, can be: hang, block, display, runin, leftmargin, rightmargin, drop, wrap, frame
+	{\bfseries\sffamily\Large} % Format of the whole section
+	{\llap{\textcolor{ocre}{\thesection}\hspace{1em}}#1} % Format of the section label
+	{0cm} % Space between the title and label
+	{} % Code before the label
+	[] % Code after the label
+	
+\titleformat
+	{name=\section, numberless} % Section type being modified
+	[block] % Shape type, can be: hang, block, display, runin, leftmargin, rightmargin, drop, wrap, frame
+	{\bfseries\sffamily\Large} % Format of the whole section
+	{#1} % Format of the section label
+	{0cm} % Space between the title and label
+	{} % Code before the label
+	[] % Code after the label
+
+\titlespacing*{\section}{0pt}{12pt}{6pt} % Spacing around section titles, the order is: left, before and after
+
+%-------------------------------------------
+
+\titleformat
+	{\subsection} % Section type being modified
+	[block] % Shape type, can be: hang, block, display, runin, leftmargin, rightmargin, drop, wrap, frame
+	{\bfseries\sffamily\large} % Format of the whole section
+	{\llap{\textcolor{ocre}{\thesubsection}\hspace{1em}}#1} % Format of the section label
+	{0cm} % Space between the title and label
+	{} % Code before the label
+	[] % Code after the label
+	
+\titleformat
+	{name=\subsection, numberless} % Section type being modified
+	[block] % Shape type, can be: hang, block, display, runin, leftmargin, rightmargin, drop, wrap, frame
+	{\bfseries\sffamily\large} % Format of the whole section
+	{#1} % Format of the section label
+	{0cm} % Space between the title and label
+	{} % Code before the label
+	[] % Code after the label
+
+\titlespacing*{\subsection}{0pt}{12pt}{4pt} % Spacing around section titles, the order is: left, before and after
+
+%-------------------------------------------
+
+\titleformat
+	{\subsubsection} % Section type being modified
+	[block] % Shape type, can be: hang, block, display, runin, leftmargin, rightmargin, drop, wrap, frame
+	{\bfseries\sffamily} % Format of the whole section
+	{\llap{{\thesubsubsection}\hspace{1em}}#1} % Format of the section label
+	{0cm} % Space between the title and label
+	{} % Code before the label
+	[] % Code after the label
+	
+\titleformat
+	{name=\subsubsection, numberless} % Section type being modified
+	[block] % Shape type, can be: hang, block, display, runin, leftmargin, rightmargin, drop, wrap, frame
+	{\bfseries\sffamily} % Format of the whole section
+	{#1} % Format of the section label
+	{0cm} % Space between the title and label
+	{} % Code before the label
+	[] % Code after the label
+
+\titlespacing*{\subsubsection}{0pt}{8pt}{4pt} % Spacing around section titles, the order is: left, before and after
+
+%-------------------------------------------
+
+\titleformat
+	{\paragraph} % Section type being modified
+	[runin] % Shape type, can be: hang, block, display, runin, leftmargin, rightmargin, drop, wrap, frame
+	{\bfseries\sffamily} % Format of the whole section
+	{} % Format of the section label
+	{0cm} % Space between the title and label
+	{#1} % Code before the label
+	[] % Code after the label
+
+\titlespacing*{\paragraph}{0pt}{0pt}{6pt} % Spacing around section titles, the order is: left, before and after
+
+
+
 
 % Set url-cut
 \makeatletter
@@ -53,8 +251,7 @@
     urlcolor=blue,
 }
 
-% Set page style.
-\pagestyle{fancy}
+
 
 % Set the style of the list
 \setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
