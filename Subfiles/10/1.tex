@@ -1,52 +1,69 @@
 \documentclass[../../Main.tex]{subfiles}
 \begin{document}
-\section{设置Python环境}
-\label{sec:10.1}
-对于Ren'Py 7与Ren'Py 8，由于两者的Python大版本号不同，因此需要安装不同的Python版本。对于Ren'Py 7，您需要安装Python 2.7；对于Ren'Py 8，您需要安装Python 3.9或更高版本。
+\section{添加多语言支持}
+对于Ren'Py 8与Future分支用户来说，您可以跳过此部分内容，因为在Future分支中已内建多语言支持。
 
-为了方便管理不同版本的Python，您可以使用conda来创建、管理不同的Python环境。在本节中我们将会以Miniconda为例来介绍如何搭建起Python开发环境。
+对于Ren'Py 7用户，您需要将Future分支中的部分代码移植到您的项目中，以实现多语言支持。
 
-\subsection{安装Miniconda与Python环境}
-前往\url{https://www.anaconda.com/download/success}，选择您的操作系统，下载Miniconda安装包，按照默认设置无需调整完成安装。
+打开screens.rpy文件，在第一行\verb|init offset = -1|下添加以下代码：
+\begin{lstlisting}
+init python:
+    def scan_translations():
 
+        languages = renpy.known_languages()
 
-在安装完成后，打开开始菜单，您应该会在“Anaconda”文件夹中看到“Anaconda Command Prompt”。点击打开它，您将进入一个命令行界面，您可以在这里输入conda命令来管理您的Python环境。
+        if not languages:
+            return None
 
-\subsubsection{对于Ren'Py 7}
-对于Ren'Py 7的用户，由于Ren'Py 7使用的Python版本为Python 2.7.18，因此我们需要额外安装Python 2.7环境。
+        rv = [(i, renpy.translate_string("{#language name and font}", i)) for i in languages ]
+        rv.sort(key=lambda a : renpy.filter_text_tags(a[1], allow=[]).lower())
 
-打开“Anaconda Command Prompt”，输入以下命令来创建一个名为\verb|renpy7|的Python 2.7环境：
-\begin{verbatim}
-    conda create -n renpy7 python=2.7
-\end{verbatim}
+        rv.insert(0, (None, "简体中文"))
 
-过程中可能会提示是否接受服务条款，按照提示输入a（Accept）接受即可。
+        bound = math.ceil(len(rv)/2.)
 
-等待环境创建完成后，输入以下命令来激活\verb|renpy7|环境：
-\begin{verbatim}
-    conda activate renpy7
-\end{verbatim}
+        return (rv[:bound], rv[bound:2*bound])
 
-\subsubsection{对于Ren'Py 8}
-对于Ren'Py 8的用户，由于Ren'Py SDK的Python版本与上游同步，您可以按照以下方法查看Python版本号：
-\begin{enumerate}
-    \item 打开Ren'Py SDK，在Ren'Py SDK主界面中按下Shift + O进入Ren'Py控制台界面；
-    \item 输入\verb|import sys; sys.version|，此时会输出一段形如“3.14.3 (main, Feb 13 2026, 15:31:44) [GCC 15.2.1 20260209]”的文本，其中“3.14.3”就是当前Ren'Py SDK所使用的Python版本。
-\end{enumerate}
+default translations = scan_translations()
+\end{lstlisting}
 
-\subsection{进入Python环境}
-在安装完Miniconda并创建了相应的Python环境后，打开Anaconda Command Prompt，对于Ren'Py 7用户您还需要激活renpy7环境。然后，在命令行中输入\verb|python|，您将进入Python交互式环境，在这里您可以输入Python代码并立即看到结果。
+然后，按住Ctrl + F打开搜索框，输入“选择选项之后”，另起一行，输入以下代码（注意缩进，第一行if语句应与上一段落的vbox在同一缩进级别）：
+\begin{lstlisting}
+                if translations:
+                    vbox:
+                        style_prefix "radio"
+                        label _("语言")
+                        hbox:
+                            viewport:
+                                mousewheel True
+                                scrollbars "vertical"
+                                ysize 100
+                                has vbox
 
-\subsection{安装第三方库}
-在Python中，您可以使用pip工具来安装第三方库。pip是Python的包管理工具，可以帮助您轻松地安装和管理Python包。
+                                for tran in translations:
+                                    vbox:
+                                        for tlid, tlname in tran:
+                                            textbutton tlname:
+                                                action Language(tlid)
+\end{lstlisting}
 
-在Anaconda Command Prompt中，输入以下命令来安装一个名为\verb|requests|的第三方库：
-\begin{verbatim}
-    pip install requests
-\end{verbatim}
+\section{生成翻译文件}
+打开Ren'Py SDK，选中您的项目，在右侧操作栏中点击生成翻译，输入语言名字，例如：\verb|mylanguage|，点击生成翻译文件。稍等片刻，您便会在game/tl/目录下看到一个名为mylanguage的文件夹，其中包含了多个rpy文件，依次点开，对照old的内容将其中的文本翻译成您需要的语言，填在new里，保存。
 
-等待安装完成后，您就可以在Python中使用\verb|requests|库了。例如，在Python交互式环境中输入以下代码来测试是否安装成功：
-\begin{verbatim}
-    import requests
-\end{verbatim}
+然后，打开对应语言文件夹下的screens.rpy，在第一行\verb|translation|后另起一行添加以下代码：
+
+\begin{lstlisting}
+    old "{#language name and font}"
+    new "<您的语言名称>"
+\end{lstlisting}
+
+例如：
+
+\begin{lstlisting}
+    old "{#language name and font}"
+    new "My Language"
+\end{lstlisting}
+
+最后重新运行游戏，您就可以在游戏中设置菜单选择新的语言了。
+
 \end{document}

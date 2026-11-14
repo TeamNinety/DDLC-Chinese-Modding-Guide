@@ -1,280 +1,383 @@
 \documentclass[../../Main.tex]{subfiles}
 \begin{document}
-\section{函数与类\PyOnly }
+\section{Python中的几种数据类型}
+\subsection{数字}
+在大多数编程语言中，数字可以分为两类⸺整型（int）与浮点类（float）型。整型顾名思义，就是指3、2、6、-2等不包含小数的数字，浮点型则与之相反，即包含小数的数字，如-2.9、7.1、3.213等。
 
-\subsection{函数}
-在编程中，我们往往会重复执行一段代码或进行类似的操作。为了减少代码的重复，我们可以使用函数。函数的作用就是把相对独立的某个功能抽象出来，成为一个独立的个体。
-
-\subsubsection{函数的定义}
-定义一个函数，只需要开头为def即可。如下例：
+数字可以进行运算，如加减乘除。在Python中，加法运算使用+号，减法运算使用--号，乘法运算使用*号，除法运算使用/号。对于其他的运算符，详细请见表\ref{table:3.1.2}。如下例：
 \begin{lstlisting}
-def test(arg1, arg2):
-    print("Arg1 is: " + arg1)
-    print("Arg2 is: " + arg2)
+>>> 1 + 2
+%\Output{3}%
+
+>>> 2 / 2
+%\Output{1.0}%
+
+>>> 10 - 8
+%\Output{2}%
+
+>>> 2 * 7
+%\Output{14}%
+\end{lstlisting}
+
+\begin{ExtraKnowledge}
+    我们可以使用变量将想要将数据保存。使用=操作符对变量进行赋值，如：
+    \begin{lstlisting}[numbers=none]
+>>> a = 1
+>>> a
+%\Output{1}%
+
+>>> a = a * 2
+>>> a
+%\Output{2}%
+    \end{lstlisting}
+\end{ExtraKnowledge}
+
+对于乘方、整除、取模（余数）计算，则分别使用**运算符、//运算符与\%运算符。如下例：
+\begin{lstlisting}
+>>> 1 ** 2
+%\Output{2}%
+
+>>> 2 ** 3
+%\Output{8}%
+
+>>> 10 // 8
+%\Output{1}%
+
+>>> 14 // 7
+%\Output{2}%
+
+>>> 14 %\%% 7
+%\Output{0}%
+
+>>> 25 %\%% 4
+%\Output{1}%
+\end{lstlisting}
+
+\subsection{字符串}
+除了数字，Python还可以处理字符串（str）。在Python中可以使用双引号或单引号括起来表示字符串，也可以使用反斜线操作符对特殊字符转义。
+
+\begin{lstlisting}
+>>> 'Hello'
+%\Output{'Hello'}%
+
+>>> "Hi!"
+%\Output{"Hi!"}%
+
+>>> 'I\'m fine.'
+%\Output{"I'm fine."}%
+
+>>> "I'm fine."
+%\Output{"I'm fine."}%
+
+>>> print("This is a backslash: \\")
+%\Output{This is a backslash: \textbackslash}%
+
+\end{lstlisting}
+
+在Python中，字符串同样支持一些运算功能。+号能将两个字符串连接起来。*则用来重复字符串。如：
+
+\begin{lstlisting}
+>>> 'Hello! ' * 3
+%\Output{'Hello! Hello! Hello!'}%
+
+>>> "Hi! " + "How are you?"
+%\Output{"Hi! How are you?"}%
+
+\end{lstlisting}
+
+\begin{center}
+    \tablehead{
+    \hline
+    操作符 & 描述 & 示例 \\
+    \hline
+    }
+    \tabletail{\hline}
+    \tablelasttail{\hline}
+    \tablecaption{常用逻辑运算符号与含义}\label{table:3.1.2}
+    \begin{supertabular}{|c|c|c|}
+        \hline
+        + & 加法运算，将运算符两侧值相加 & 1 + 2; "str" + "string" \\
+        \hline
+        - & 减法运算，将运算符两侧值相减 & 1 - 2\\
+        \hline
+        * & 乘法运算，将操作符两侧值相称 & 4 * 2；"str" * 3\\
+        \hline
+        / & 除法运算，左操作数除以右操作数 & 3 / 1\\
+        \hline
+        \% & 取模运算，左操作数除以右操作数的余数部分 & 7 \% 2\\
+        \hline
+        ** & 幂运算，左操作数的右操作数次幂 & 2 ** 3\\
+        \hline
+        // & 整除运算，左操作数整除以右操作数& 3 // 2\\
+        \hline
+        += & 将左侧值加上右侧值并将结果保存给左侧对象 & a += 100\\
+        \hline
+        -= & 将左侧值减去右侧值并将结果保存给左侧对象 & a -= 100\\
+        \hline
+        *= & 将左侧值乘上右侧值并将结果保存给左侧对象 & a *= 100\\
+        \hline
+        /= & 将左侧值除以右侧值并将结果保存给左侧对象 & a /= 100\\
+        \hline
+        \%= & 将左侧值取模右侧值并将结果保存给左侧对象 & c \%= a 等效于 c = c \% a\\
+        \hline
+        **=	& 幂赋值运算符 & c **= a 等效于 c = c ** a\\
+        \hline
+        //=	& 取整除赋值运算符 & c //= a 等效于 c = c // a\\
+        \hline
+    \end{supertabular}
+\end{center}
+
+\subsection{列表与元组}
+
+\subsubsection{列表}
+
+在Python中，列表（list）是一种常见的数据类型。在列表可以将多种数据组合在一起。如：
+\begin{lstlisting}
+>>> ['1', '2', '3']
+%\Output{['1', '2', '3']}%
+
+>>> ['This', 'is', 'a', 'list']
+%\Output{['This', 'is', 'a', 'list']}%
+
+\end{lstlisting}
+
+
+在列表中，我们可以使用索引（index）来访问指定数据。如:
+\begin{lstlisting}
+>>> name_list = ['Sayori', '莫妮卡', 'Yuri', 'Natsuki']
+>>> name_list[0]
+%\Output{'Sayori'}%
+
+>>> name_list[3]
+%\Output{'Natsuki'}%
+\end{lstlisting}
+
+\begin{Warning}
+    从上例中，我们可以知道索引从0开始。但请注意：索引最大值不可以超出列表的长度。即在name\_list这个列表中，索引最大只能为3，因为此时从0往后数4个数为3。如果索引超出了列表长度，Python就会抛出IndexError错误。如：
+    \begin{lstlisting}[numbers=none]
+>>> name_list = ['Sayori', 'Monika']
+>>> name_list[2] # 尝试访问一个不存在的位置
+
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: list index out of range
+    \end{lstlisting}
+\end{Warning}
+
+\begin{ExtraKnowledge}
+    索引的值也可以为负数，此时Python会从列表尾部向前寻找索引。若要从尾部开始寻找，索引应从-1开始，且同样不可超出列表最大长度。如下例：
+    \begin{lstlisting}[numbers=none]
+>>> name_list = ['Sayori', 'Monika', 'Natsuki', 'Yuri']
+>>> name_list[-1]
+%\Output{'Yuri'}%
+
+>>> name_list[-4]
+%\Output{'Sayori'}%
+
+>>> name_list[-10]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: list index out of range
+    \end{lstlisting}
+\end{ExtraKnowledge}
+
+\begin{ExtraKnowledge}
+    索引也可用于字符串，但无法修改字符串的数据。字符串中的索引用法与列表中的索引用法相同。
+\end{ExtraKnowledge}
+
+同时，我们可对列表中的数据进行修改。要修改数据，只需要使用索引指定修改的数据，然后使用=重新赋值。如：
+\begin{lstlisting}
+>>> name_list = ['Sayori', '莫妮卡', 'Natsuki', 'Yuri']
+>>> name_list[1] = 'Monika'
+>>> name_list
+
+%\Output{['Sayori', 'Monika', 'Natsuki', 'Yuri']}%
+\end{lstlisting}
+
+若要添加数据，则可以使用insert函数与append函数。如
+\begin{lstlisting}
+>>> name_list = ['Monika', 'Sayori']
+>>> name_list.insert(1, 'Natsuki')
+>>> name_list.append('Yuri')
+>>> name_list
+
+%\Output{['Monika', 'Natsuki', 'Sayori', 'Yuri']}%
+\end{lstlisting}
+
+对于insert函数，它接受两个参数。第一个参数为一个整数，代表在列表的指定索引处添加一个数据。第二个参数则是添加的数据。
+
+对于append函数，它接受一个参数，即要添加的内容。append函数会在列表末尾添加数据。
+
+若要删除数据，则可以使用pop函数与remove函数。pop函数与remove函数都只接受一个参数。pop函数接受一个整数参数，可以删除列表中指定索引处的数据。remove函数接受一个任意类型的数据，它会先检查列表中是否存在一个数据与参数相同，如果存在则移除，如果不存在则抛出ValueError错误。如：
+\begin{lstlisting}
+>>> name_list = ['Monika', 'Sayori', 'Yuri', 'Natsuki']
+>>> name_list.pop(0)
+>>> name_list
+%\Output{['Sayori', 'Yuri', 'Natsuki']}%
+
+>>> name_list.remove("Sayori")
+%\Output{['Yuri', 'Natsuki']}%
+
+>>> name_list.remove("Monika")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: list.remove(x): x not in list
+\end{lstlisting}
+
+\subsubsection{元组}
+元组（tuple）是一种不可变的数据类型。元组支持列表除修改、添加、删除外的所有功能。如：
+\begin{lstlisting}
+>>> name_list = ('Sayori', 'Monika', 'Natsuki', 'Yuri')
+>>> name_list[3]
+%\Output{'Yuri'}%
+
+>>> name_list.append("Main Character")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'tuple' object has no attribute 'append'
+\end{lstlisting}
+
+\subsection{字典}
+字典（dict）就像它的名字一样，可以像查字典一样取查找。如：
+\begin{lstlisting}
+>>> point = {'Sayori': 0}
+>>> point
+%\Output{\{'Sayori': 0\}}%
+
+>>> point['Sayori'] = 2
+>>> point['Monika'] = 1
+>>> point['Natsuki'] = 3
+>>> point['Yuri'] = 1
+
+>>> point
+%\Output{\{'Sayori': 2, 'Monika': 1, 'Natsuki': 3, 'Yuri': 1\}}%
+
+>>> point['Sayori']
+%\Output{2}%
+\end{lstlisting}
+
+\subsection{布尔类型}
+布尔类型是最简单的一种类型。布尔类型只包括两个值真（True）、假（False）。如：
+\begin{lstlisting}
+>>> is_act_two = False
+>>> is_act_two
+%\Output{False}%
+
+>>> is_act_two = True
+>>> is_act_two
+%\Output{True}%
+\end{lstlisting}
+
+Python中的内置数据类型均可进行逻辑运算和比较。如：
+\begin{lstlisting}
+>>> a = False
+>>> a is True
+%\Output{False}%
+
+>>> not a
+%\Output{True}%
+
+>>> b = 3
+>>> b != 2
+%\Output{True}%
+
+>>> c = 2
+>>> c <= b
+# 即 2 <= 3
+
+%\Output{True}%
+\end{lstlisting}
+详细逻辑操作符请见表\ref{table:4.1.5}。
+
+\begin{center}
+    % \tablefirsthead{
+    %     \hline
+    %     \multicolumn{1}{|c}{操作符}
+    %     \multicolumn{1}{|c|}{描述}
+    %     \multicolumn{1}{c|}{示例}
+    %     \hline
+    % }
+    \tablehead{
+    \hline
+    操作符 & 描述 & 示例\\
+    \hline
+    }
+    \tabletail{\hline}
+    \tablelasttail{\hline}
+    \tablecaption{常见逻辑、比较运算符与示意}
+    \label{table:4.1.5}
+    \begin{supertabular}{|c|p{8cm}|c|}
+        \hline
+        == & 比较两个对象是否相等 & 2 == 2; a == b\\
+        \hline
+        != & 比较两个对象是否不等 & 1 != 2; a != b\\
+        \hline
+        > & 比较左对象是否大于右对象 & 3 > 2\\
+        \hline
+        < & 比较左对象是否小于右对象 & 2 < 3\\
+        \hline
+        >= & 比较左对象是否大于等于右对象 & 3 >= 2; 3 >= 3\\
+        \hline
+        <= & 比较左对象是否小于等于右对象 & 2 <= 3; 3 <= 3\\
+        \hline
+        is & 比较两个对象内存是否相等（更加严格的==）& a is True\\
+        \hline
+        not & 逻辑非，用于反转操作数的逻辑状态。即True则为False，False则为True & not True\\
+        \hline
+        and & 逻辑与，当只有左操作数与右操作数皆为真时，条件为真 & 1 == 2 and 3 < 4\\
+        \hline
+        or & 逻辑或，当左操作数和右操作数中有一个为真时，条件为真 & 1 == 2 or 10 > 6\\
+        \hline
+    \end{supertabular}
+\end{center}
+
+\begin{ExtraKnowledge}
+    此处只对Python的一些常见类型做了简单的介绍。Python中还有其他类型，如可调用类（callable）等。本书目的以教学Ren'Py为主，故不会涉及Python过多。有兴趣者可以前往 \url{https://www.runoob.com/python3/python3-tutorial.html} 进行更深入的学习。
+\end{ExtraKnowledge}
+
+\subsection{小结}
+现在，让我们将上述所说的Python的内置数据类型运用到实际代码中。如下例：
+
+\begin{lstlisting}[caption=script-ch1.rpy]
+# Chapter 0
+label ch0_start:
+    python:
+        # aff - affection
+        n_aff = 0
+        m_aff = 0
+    scene bg club_day
+    "{cps=20}快到{b}学园祭{/b}了。{/cps}{w=.5}{nw}"
+    show monika 1a at l41 zorder 1
+    m "各位！我们得开始准备了！"
+    show sayori 1a at h42 zorder 1
+    s "好耶！！！！"
+    show natsuki 1a at t43 zorder 1
+    n 2d "啊，我都等不及学园祭了。"
+    n "肯定会很棒的！"
+    show yuri 1a at s44 zorder 1
+    y "..."
+    scene bg club_day
+    show monika 2a at t21 zorder 1
+    show sayori 2a at t22 zorder 1
+    m "那么，是时候来进行分工了。"
+    m 4k "[player],你想要做什么? "
+    menu:
+        "做小蛋糕":
+            s "夏树的小蛋糕最好吃了！"
+            python:
+                n_aff += 1
+                m_aff -= 1
+        "布置教室":
+            m "那我们可得抓紧时间了！"
+            python:
+                n_aff -= 1
+                m_aff += 1
     return
 \end{lstlisting}
 
-其中，test为这个函数的名字，arg1、arg2则为这个函数接受的参数。若留空，代表该函数不接受参数。冒号后的部分被称为函数主体，是调用该函数后具体的一些代码。return语句则是函数运行成功后返回的值，可以留空。
-
-调用函数也非常简单，如下例：
-\begin{lstlisting}
-test(1, 2)
-%\Output{Arg1 is: 1}%
-%\Output{Arg2 is: 2}%
-
-test(5, arg2=1)
-%\Output{Arg1 is: 5}%
-%\Output{Arg2 is: 1}%
-
-test(arg2=4, arg1=2)
-%\Output{Arg1 is: 2}%
-%\Output{Arg2 is: 4}%
-
-test(arg1=7, arg2=-7)
-%\Output{Arg1 is: 7}%
-%\Output{Arg2 is: -7}%
-\end{lstlisting}
-
-由此可见，在给函数传递参数时，可以按照参数的位置直接传递，也可以使用“参数名=参数”的方式传递。
-
-\subsubsection{函数命名空间}
-命名空间，可以理解成为代码运行的一个环境。函数拥有一个独立于其他代码的运行环境，所有在函数中的变量，都位于一个独立的命名空间内。在这个空间里，函数内部的变量与函数外界的变量不相等。在函数内部调用变量时，会优先去寻找函数的命名空间，再去寻找外部的环境查找变量。因此，函数外的代码无法读取或修改函数命名空间内的变量，函数内也无法直接修改全局命名空间的变量。
-
-如下例：
-\begin{lstlisting}
->>> a = 1
->>> def test():
-...     a = 2
-...     print(a)
->>> print(a)
-%\Output{1}%
->>> test()
-%\Output{2}%
->>> print(a)
-%\Output{1}%
-\end{lstlisting}
-
-运行上述代码，我们发现虽然一开始我们将a这个变量赋值为1，在函数中，我们将a“修改”（实际上是在函数内部重新定义了a）为了2，并且在函数内部可以看到a的值确实为2，但当我们在函数外打印函数值，会发现值依然是1，这便是函数命名空间发挥的作用。
-
-如果要在函数内修改外部变量，则应使用global语句声明要使用的变量，如下例：
-\begin{lstlisting}
->>> a = 1
->>> def test():
-...     global a
-...     a = 2
-...     print(a)
-
-
->>> print(a)
-%\Output{1}%
->>> test()
-%\Output{2}%
->>> print(a)
-%\Output{2}%
-\end{lstlisting}
-
-运行上述代码，与第一个例子不同在于，在函数内部我们是真真正正的对外部变量a进行了修改，并且可以看到最后值是2，说明修改成功了。
-
-在Python中，还有一种情况是函数内部还有一个函数，我们称之为嵌套函数。如下例子：
-\begin{lstlisting}
-def func1():
-    x = 1
-    print(x)
-    def func2():
-        print(x)
-
-    def func3():
-        x = 2
-        print(x)
-    func2()
-    func3()
-    print(x)
-\end{lstlisting}
-
-在这个例子中，func2、func3就被称为嵌套函数。嵌套函数符合函数的特性，拥有一个独立的、不与其他代码共享的运行空间。但是，嵌套函数也能访问定义这个嵌套函数范围内的变量而不需声明。因此，这段代码的运行结果如下：
-\begin{lstlisting}
->>> func1()
-%\Output{1}%
-%\Output{1}%
-%\Output{2}%
-%\Output{1}%
-\end{lstlisting}
-
-但请注意，嵌套函数有一种特殊情况无法访问范围外变量，当嵌套函数内的代码存在一个同名变量或者在后面的代码中对这个变量进行了修改，那么Python会认为一开始的这个代码企图在变量定义之前访问，会抛出UnboundLocalError错误。具体例子如下：
-\begin{lstlisting}
-def func1():
-    x = 0
-    def func2():
-        print(x)
-        x = 1
-        print(x)
-    print(x)
-\end{lstlisting}
-
-我们预期中的运行结果应该输出0 1 0。但事实上，这段代码会抛出UnboundLocalError错误。原因就是在func2中，我们定义了一个与func1中的x变量同名的变量，当Python运行到第4行时，由于第5行对变量x进行了定义，它会认为我们想要访问的应该是func2中的变量x而不是func1中的变量x，而func2中的变量x是在第5行才被定义，故Python会抛出错误，告诉我们我们企图在变量x定义之前访问x这个变量。
-
-这个时候如果我们想在嵌套函数内修改外部环境中的变量的值该怎么办呢？答案是nonlocal语句，它和global语句的用法一致，但是语义不同。如下例：
-\begin{lstlisting}
-x = 0
-y = 3
-print(x)
-def func1():
-    global x 
-    x = 1
-    print(x)
-    y = 0
-    def func2():
-        nonlocal y
-        y = 2
-        print(y)
-    func2()
-    print(y)
-
-func1()
-print(x)
-print(y)
-\end{lstlisting}
-
-这段代码的运行结果如下：
-\begin{lstlisting}
-%\Output{0}%
-%\Output{1}%
-%\Output{2}%
-%\Output{2}%
-%\Output{1}%
-%\Output{3}%
-\end{lstlisting}
-
-上述代码中，我们在全局范围内定义了x、y两个变量并分别赋值为0、3。
-在func1中，我们使用global语句声明了func1函数内部的x变量就指向外部变量x，并修改为了1，并在func1中定义了内部变量y。
-随后，我们运行到了func2函数中。在func2函数中，我们通过nonlocal语句声明了func2中的变量y指向的是内部变量y（注意不是外部变量y）并修改值为2。在func1中打印变量y，也会发现值为2，说明func2函数中的y确实指向了func1函数中的y。最后在外部打印x、y变量，发现x被修改为1，而y依然为3，说明func1中x确实是外部变量x，func1、func2中的变量y与外部变量y不相同。
-
-\subsection{类}
-Python是一门面向对象的语言，而类是一种用来描述具有相同属性和方法（函数）的对象的集合。它定义了该集合中每个对象共同具有的方法。对象是类的实例化，实例化就是用类创建对象的过程。简单来说，类就是一个模板，存放着一堆特殊的函数，而实例化就是用这个模板照葫芦画瓢生成一个对象的过程。对象具有唯一性，每一个实例化结果的对象都是不同的。
-
-类中的函数分为三种：类函数、方法函数、静态函数。静态函数与普通函数并无差异，而类函数与方法函数属于绑定函数，它们和类与对象息息相关。在目前阶段，我们并不需要去了解每种函数的定义以及作用，我们只需要明白类中存放着这三种函数即可。
-
-\subsubsection{何时使用类？}
-专业术语来说，类是面向对象的，而函数是面向过程的。
-
-类将多个功能相关的函数进行封装，是多个函数的集合，可以生成多个独一无二的对象，每个对象之间互不相同、对象中的变量也不相同。类可以保存某个属性的状态，同时也可以理解成为一个模板，照着这个模板，我们能生成一个对象。并且类具有修改容易的优点。
-
-那么何时使用类呢？如下例：
-\begin{lstlisting}
-# 定义一个字典，存放每个角色支线故事是否解锁的状态
-unlocked = {'monika': False, 'natsuki': False, 'yuri': False, 'sayori': False}
-
-# 定义跳转到对应角色支线故事的函数
-def jump_to_monika():
-    ...
-def jump_to_natsuki():
-    ...
-def jump_to_sayori():
-    ...
-def jump_to_yuri():
-    ...
-
-# 定义开始支线故事的函数
-def side_story(winner, winner_point):
-    # 声明 unlocked 变量是一个全局变量
-    global unlocked
-
-    # target\_points: 目标分数，如果分数没有达到目标分数则不开启支线故事
-    target_points = 10
-
-    # 判断
-    if winner_point >= target_point:
-        if winner == "monika":
-            jump_to_monika()
-        elif winner == 'natsuki':
-            jump_to_natsuki()
-        elif winner == 'sayori':
-            jump_to_sayori()
-        elif winner == 'yuri':
-            jump_to_yuri()
-
-        # 设置状态
-        unlocked[winner] = True
-
-side_story('monika', 5)
-
-\end{lstlisting}
-
-可以看到，如果用函数来实现，我们需要在外部环境定义许多函数与变量，例如unlocked、jump\_to\_monika等。稍有不当，我们就会污染整个外部环境。并且因为我们无法直接在游戏中对函数内的变量进行修改，所以我们没有办法在游戏运行过程中降低目标分数。
-如果用类来实现：
-\begin{lstlisting}
-# 定义一个类
-class SideStory:
-
-    # \_\_init\_\_是一个特殊的函数，它用于实例化时告诉Python要怎样生成对象
-    def __init__(self):
-        # 设置 unlocked 变量
-        self.unlocked = {'monika': False, 'natsuki': False, 'yuri': False, 'sayori': False}
-
-        # target\_points: 目标分数，如果分数没有达到目标分数则不开启支线故事
-        self.target_points = 10
-
-    def start(self, winner, winner_point):
-        # 判断
-        if winner_point >= self.target_points:
-            if winner == "monika":
-                ...
-            elif winner == 'natsuki':
-                ...
-            elif winner == 'sayori':
-                ...
-            elif winner == 'yuri':
-                ...
-            
-            self.unlocked[winner] = True
-
-side_story = SideStory()
-side_story.start('monika', 5)
-
-side_story.target_points = 5
-\end{lstlisting}
-
-我们可以看到，使用类与对象，我们就避免了在外部环境定义许多函数与变量，它们都被放在了类的命名空间中，避免了污染外部命名空间。并且类还有一个好处：容易在外部对内部变量进行修改，因此对于一开始的问题便得到了解决。
+上述代码中，我们现将n\_aff与m\_aff赋值为了0，并且随着玩家做出的选择，n\_aff与m\_aff会分别增加或减少一定的数值。
 
 \begin{ExtraKnowledge}
-    self是一个特殊的参数。当类被实例化后，无论调用其中的哪一个方法（静态方法除外），Python都会将这个对象自己传递给第一个参数。
+    \$、python语句块都是在Ren'Py中运行Python代码的方式，将会在后续的章节中介绍。
 \end{ExtraKnowledge}
-
-\subsubsection{类的定义}
-定义一个类，只需要开头为class即可。如下例：
-
-\begin{lstlisting}
-class Test:
-    def __init__(self):
-        self.a = 1
-
-    def counter(self):
-        self.a += 1
-        print(self.a)
-\end{lstlisting}
-
-上述例子中，定义了一个名为Test的类，这个类中有一个变量为a，且有一个counter方法用于打印a的值。
-\begin{ExtraKnowledge}
-    在类中，以双下划线开头的、具有特殊的方法名的方法叫魔法方法（Magic Methods)。上述例子中的\_\_init\_\_特殊方法用于在实例化一个类时会运行的初始化函数。类似的魔法方法还有\_\_eq\_\_，\_\_ne\_\_等。
-\end{ExtraKnowledge}
-
-\subsubsection{类的使用}
-一般来说，在使用类前，需要对类进行实例化。实例化后，类就会变成对象。创造对象和创造变量类似。如下例：
-
-\begin{lstlisting}
->>> test = Test()
->>> test.counter()
-%\Output{2}%
->>> test.counter()
-%\Output{3}%
-\end{lstlisting}
-
-第一行的\verb|test = Test()|创造了一个Test对象。剩下两行代码则是在调用这个对象的counter方法。
-
-如果要在类的方法中定义或使用一个属性，必须使用\verb|self.<变量名> = <值>|的方式进行赋值，否则这个属性就只会存在于方法的命名空间而不是对象的命名空间。简单理解就是如果不使用上述方式赋值，那么这个值就不会被保存到对象里面。
-
-\begin{ExtraKnowledge}
-    Python中类与函数的使用远远不止这些，您可以前往 \url{https://www.runoob.com/python3/python3-function.html} 与 \url{https://www.runoob.com/python3/python3-class.html} 了解更多。
-\end{ExtraKnowledge}
-
 \end{document}

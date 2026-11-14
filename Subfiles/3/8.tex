@@ -1,0 +1,72 @@
+\documentclass[../../Main.tex]{subfiles}
+\begin{document}
+\section{等效语句}
+等效语句是在Python中使用Ren'Py语法的一种方式。等效语句只能在Python代码中运行。
+
+\subsection{对话}
+Ren'Py的say语句对应两种等效语句。如下例：
+
+\begin{lstlisting}
+m "你好！"
+\end{lstlisting}
+
+这段代码不仅等效于下列代码：
+
+\begin{lstlisting}
+$ m("你好！")
+\end{lstlisting}
+
+同时也等效于：
+
+\begin{lstlisting}
+$ renpy.say(m, "你好")
+\end{lstlisting}
+
+不过，为了保持语义上的通畅，我们常使用后者。
+
+\subsection{图像显示}
+
+\subsubsection{show}
+
+show语句的等效语句的语法如下：
+
+\begin{lstlisting}
+renpy.show(<name>, at_list=<position>, zorder=<zorder number>)
+\end{lstlisting}
+
+\subsubsection{hide}
+
+hide语句的等效语句的语法如下：
+
+\begin{lstlisting}
+renpy.hide(<name>)
+\end{lstlisting}
+
+\subsubsection{scene}
+
+scene语句的等效语句的语法如下：
+
+\begin{lstlisting}
+renpy.scene()
+renpy.show(<name>)
+\end{lstlisting}
+
+\subsubsection{with 从句}
+
+with 语句的等效语句的语法如下：
+
+\begin{lstlisting}
+renpy.with_statement(<name>)
+\end{lstlisting}
+
+\subsection{call 和 jump}
+
+call 和 jump 语句的等效语句的语法如下：
+
+\begin{lstlisting}
+renpy.call(label=<script name>)
+renpy.jump(label=<script name>)
+\end{lstlisting}
+
+对于更多关于等效语句的介绍，请查阅 \url{https://doc.renpy.cn/zh-CN/statement_equivalents.html}
+\end{document}

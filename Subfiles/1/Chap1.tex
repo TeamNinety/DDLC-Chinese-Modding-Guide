@@ -8,7 +8,7 @@ Ren'Py是一种视觉小说语言，名字是恋愛（れんあい，即恋爱�
 
 \section{关于Ren'Py}
 \subsection{Ren'Py概述}
-Ren'Py几乎支持视觉小说所应该具有的功能，如:分支故事、存储与加载游戏、回退到之前故事的存储点、多样性的场景转换等。其首次发布于2004年8月24日。Ren'Py拥有类似电影剧本的语法，并且能够允许用户编写Python代码来增加新的功能。除此之外，游戏引擎内附的出版工具能提供基本的脚本加密与压缩游戏素材。
+Ren'Py是一款开放源代码的自由软件引擎，用来创作透过电脑叙述故事的视觉小说。Ren'Py几乎支持视觉小说所应该具有的功能，如：分支故事、存储与加载游戏、回退到之前故事的存储点、多样性的场景转换等。其首次发布于2004年8月24日。Ren'Py拥有类似电影剧本的语法，并且能够允许用户编写Python代码来增加新的功能。除此之外，游戏引擎内附的出版工具能提供基本的脚本加密与压缩游戏素材。
 
 Ren'Py建构于Python软件库Pygame之上，而它又基于了SDL。Ren'Py官方支持Windows、Linux以及较新版Mac OS X，并可通过Arch Linux、Ubuntu、Debian或Gentoo的软件包管理系统安装。它可以在Windows、macOS、Linux、Android、OpenBSD、iOS和wasm的HTML5下建置。
 
@@ -16,12 +16,13 @@ Ren'Py建构于Python软件库Pygame之上，而它又基于了SDL。Ren'Py官�
 
 \section{下载Ren'Py}
 \label{1.2}
-目前主流的Ren'Py分为3个版本:Ren'Py 6、Ren'Py 7、Ren'Py 8。其中Ren'Py 6与Ren'Py 7兼容Python 2且Ren'Py 7已经支持大部分Python 3特性，而Ren'Py 8完全兼容Python 3。需要注意的是，Ren'Py 6已停止支持。
+目前主流的Ren'Py分为3个版本：Ren'Py 6、Ren'Py 7、Ren'Py 8。其中Ren'Py 6与Ren'Py 7兼容Python 2且Ren'Py 7已经支持大部分Python 3特性，而Ren'Py 8完全兼容Python 3。需要注意的是，Ren'Py 6已停止支持。
 
-Ren'Py几乎可在所有主流系统上运行。由于Ren'Py 8目前稳定性存疑，故本书主要使用Ren'Py 7进行教学。
-
+Ren'Py几乎可在所有主流系统上运行。您可以自由选择Ren'Py 7 或 Ren'Py 8进行开发。由于2.0模板无需修改即可运行在Ren'Py 7上，故本书将以Ren'Py 7为例进行教学。
 \begin{Comment}
-Ren'Py 7.4.4及以后的版本均不支持Windows XP及更早的系统。
+    对于那些习惯Python 3，或想要直接使用Ren'Py 8的读者，请参考第\ref{chap:7}章的内容完成开发环境配置。
+
+    Ren'Py 7.4.4及以后的版本均不支持Windows XP及更早的系统。
 \end{Comment}
 
 \subsection{下载Ren'Py SDK 7}\label{sec:1.2.1}
@@ -32,10 +33,7 @@ Ren'Py 7.4.4及以后的版本均不支持Windows XP及更早的系统。
     \label{fig:1.2.1}
 \end{figure}
 
-\begin{Comment}
-本章编写时DDLC Mod中文模板支持的最新版Ren'Py SDK 7为7.6.1。
-\end{Comment}
-使用任意浏览器进入 \url{https://www.renpy.org/release/7.6.1} 网页(如图\ref{fig:1.2.1})，您将在本页面看到三个按钮，分别是：Download SDK 7z.exe、Download SDK dmg与 Download SDK tar.bz2。Windows用户请下载第一个，macOS用户请下载第二个，Linux用户请下载第三个。
+使用任意浏览器进入 \url{https://www.renpy.org/release/7.6.1} 网页（如图\ref{fig:1.2.1}），您将在本页面看到三个按钮，分别是：Download SDK 7z.exe、Download SDK dmg与 Download SDK tar.bz2。Windows用户请下载第一个，macOS用户请下载第二个，Linux用户请下载第三个。
 
 \begin{Comment}
     若无法打开文件，请点击第二行小字Download SDK zip下载ZIP文件
@@ -58,7 +56,7 @@ Ren'Py 7.4.4及以后的版本均不支持Windows XP及更早的系统。
 以ZIP文件为例，下载完成后打开压缩包（如图\ref{fig:1.2.2}）
 将文件夹中的所有内容解压，得到如下内容。（如图\ref{fig:1.2.3}）
 
-Windows用户请双击renpy.exe或renpy-32.exe(在某些情况下，它可能显示为renpy或renpy-32)；MacOS用户若使用驱动器镜像(dmg)安装Ren'Py，挂载后将renpy-7.6.1复制到桌面，进入桌面上的文件夹并运行renpy。；Linux用户请运行renpy.sh。
+Windows用户请双击renpy.exe或renpy-32.exe（在某些情况下，它可能显示为renpy或renpy-32）；MacOS用户若使用驱动器镜像（dmg）安装Ren'Py，挂载后将renpy-7.6.1复制到桌面，进入桌面上的文件夹并运行renpy；Linux用户请运行renpy.sh。
 
 \begin{figure}[htbp]
     \centering
@@ -77,8 +75,8 @@ Windows用户请双击renpy.exe或renpy-32.exe(在某些情况下，它可能显
     \end{minipage}
 \end{figure}
 
-打开Ren'Py后，正常来讲，您会见到如图\ref{fig:1.2.4}所示的界面。点击简体中文后，您会见到如图\ref{fig:1.2.5}所示的界面。
+打开Ren'Py后，您应见到如图\ref{fig:1.2.4}所示的界面。点击简体中文后，您会见到如图\ref{fig:1.2.5}所示的界面。
 
-若您没有见到该界面，而是直接见到类似图\ref{fig:1.2.5}，请点击右下角的preferences，在右下角Language中选中简体中文即可调整为简体中文。
+若您没有见到该界面，而是直接见到类似图\ref{fig:1.2.5}，可点击右下角的preferences，在Language中选中简体中文。
 
 \end{document}

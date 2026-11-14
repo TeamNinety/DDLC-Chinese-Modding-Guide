@@ -11,17 +11,19 @@
     \end{itemize}
 \end{ChapterGoals}
 
-在开发中，我们往往会想增添一些资源，如更多的背景音乐、更丰富的角色表情与背景、为角色增添更多服装等。在本章中，我们将重点学习如何管理模组资源，往模组中增添新的图像、音频等。
+在游戏设计中，额外的剧情往往会面临着需求：更多的背景音乐、更丰富的角色表情与背景、为角色增添更多服装，甚至是新的角色。在本章中，我们将重点学习如何管理模组资源，往模组中增添新的图像、音频等。
 
 \section{增添资源}
-一般来说，在Mod工程里的game文件夹下会有一个名叫mod\_assets的文件夹。所有在mod\_assets文件夹里的内容都会在生成发行版时被打包成一个rpa文件。（在后续的章节里，我们将会详细学习如何控制哪些文件打包、哪些不打包，以及如何生成发行版）
+一般来说，在Mod工程里的game文件夹下会有一个名叫mod\_assets的文件夹。所有在mod\_assets文件夹里的内容都会在生成发行版时被打包成一个rpa文件。（在后续的章节里，我们将会了解如何控制哪些文件打包、哪些不打包，以及如何生成发行版）
 
 \begin{ExtraKnowledge}
-    目前，常见的资源获取方法有：从DDLC Community Assets获取（Google Drive）、从一些开发QQ群提供的资源、Reddit等。
+    目前，常见的资源获取渠道有：DDLC Community Assets（Google Drive）、一些开发QQ群提供的资源、Reddit等。
 \end{ExtraKnowledge}
 
 \begin{Attention}
-    在使用资源前，请务必注意版权问题。一般来说，在DDLC Community Assets中的文件只需要在感谢名单中添加作者的名字，但也有部分资源会有更多的要求。请记住：如果没有得到作者的授权就使用资源是侵权违法行为。保护作者的知识产权，不仅是在维护作者的权利、保护作者的心血，更是在保护创造、促进DDLC社区的良好发展。
+    在使用资源前，请务必注意版权问题。一般来说，DDLC Community Assets中的文件只需要在感谢名单中添加作者的名字，但也有部分资源会有更多的要求。
+    
+    请记住：如果没有得到作者的授权就使用资源是侵权违法行为。保护作者的知识产权，不仅是在维护作者的权利、保护作者的心血，更是在保护创造、促进DDLC社区的良好发展。
 \end{Attention}
 
 
@@ -42,7 +44,7 @@ define <变量名> = DynamicCharacter('<存储角色名的变量名>', image='<s
 
 \begin{ExtraKnowledge}
     
-    在某些情况下，我们可能改变角色说话内容的双引号为其他符号，我们可以通过修改what\_prefix和what\_suffix实现效果。
+    在某些情况下，我们可能想要改变角色说话内容的双引号为其他符号，我们可以通过修改what\_prefix和what\_suffix实现效果。
 
     正常情况下，除旁白外所有的角色说的话都会被双引号包住。如：
     \begin{lstlisting}
@@ -95,8 +97,10 @@ define c = DynamicCharacter('c_name', image='charlie', what_prefix='"', what_suf
 现在，在mod\_assets文件夹下创造一个名为images的文件夹。在后续的教程中，我们将会把所有的图片资源都存储在这个images文件夹内。
 
 \begin{Warning}
-请注意，对于所有图片，其格式都应为PNG，且背景应该是透明的，图像编号不能和已有的重复。
+请注意，对于所有图片，其格式都推荐为PNG，背景应透明的，图像编号不能和已有的重复。
+
 角色立绘资源的分辨率应为960x960以保证兼容性，且对于一个完整的立绘应遵循原版DDLC的原则分成三个图像：头部、左半身、右半身。
+
 背景图像的尺寸应为16:9，分辨率应该为1280x720。如果图像资源分辨率过大，您可以使用软件降低图像分辨率或使用size属性解决：
 \begin{lstlisting}
 size (1280,720) # 添加 size 属性
@@ -146,7 +150,8 @@ image <角色名> <立绘编号> = im.Composite((960, 960), (0, 0), "mod_assets/
     \end{lstlisting}
 \end{enumerate}
 
-例如现在为优里增添了新的服装与表情，且图像资源名分别为 1l， 1r， happy.png
+例如现在为优里增添了新的服装与表情，且图像资源名分别为1l，1r，happy.png
+
 那么您使用的代码应该长这个样子：
 \begin{lstlisting}
 # m means mod
@@ -172,16 +177,14 @@ image bg <背景名> = "mod_assets/images/bg/<背景图像资源名>.png"
 \subsection{音频资源}
 现在，在mod\_assets文件夹下创造一个名为audio的文件夹。将音频放进您刚才创建的文件夹内，同时我们建议您将音频名改为小写的单词。
 
-\begin{Warning}
-    Ren'Py 只支持以下几种音频格式：
-    \begin{itemize}
-        \item Opus
-        \item Ogg
-        \item MP3
-        \item WAV
-        \item FLAC
-    \end{itemize}
-\end{Warning}
+Ren'Py 只支持以下几种音频格式：
+\begin{itemize}
+    \item Opus
+    \item Ogg
+    \item MP3
+    \item WAV
+    \item FLAC
+\end{itemize}
 
 然后，打开definitions.rpy文件，新增以下代码：
 \begin{lstlisting}

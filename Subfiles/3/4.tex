@@ -1,70 +1,155 @@
 \documentclass[../../Main.tex]{subfiles}
 \begin{document}
-\section{使用变量}
-\subsection{变量的命名}
-变量命名必须遵循以下规则：
-\begin{itemize}
-    \item 变量名只能包含字母、数字和下划线（\_）；
-    \item 变量名不能以数字开头；
-    \item 变量名不能是Python的关键词（如：def、class、return等）；
-    \item 变量名区分大小写（如：var与Var是两个不同的变量）。
-\end{itemize}
+\section{Python内置函数与库}
+Python中内建了许多实用的函数与库，能够帮助我们以更简单的方式实现一些功能。在本节中，我们将学习一些Python中常用的函数、第一方库以及第三方库的使用。
 
-为了提高代码的可读性，避免出现混淆，以下为建议遵守的变量命名规则：
-\begin{itemize}
-    \item 变量名应具有描述性，能够反映变量的用途或内容。例如，使用player\_score而不是ps；
-    \item 对于实例、函数名等，使用下划线命名法，即使用下划线（\_）分隔单词，以提高可读性。例如，使用total\_count而不是 totalcount；
-    \item 避免使用过于简短或模糊的变量名，如a、b、data等，除非在非常短的代码段中使用；
-    \item 对于类、错误对象，建议使用大驼峰命名法（每个单词的首字母大写且不使用下划线），如MyClass、CustomError而非my\_class、custom\_error。
-\end{itemize}
+\subsection{Python内置函数}
+常用的Python内置函数包括但不限于：max、min、len、range、type、isinstance等，接下来让我们了解每一个函数的用法与作用。
 
-\subsection{python语句块}
-关于如何在Python语句块中定义变量，请阅读第\ref{sec:4.3}章
-\subsection{define语句}
-define语句在初始化时将一个变量赋值。此变量视为一个常量，初始化之后不应再改变。例如：
+\subsubsection{max、min}
+max函数用于返回一个可迭代对象中的最大值，而min函数则用于返回一个可迭代对象中的最小值。例如：
+\begin{lstlisting}
+numbers = [1, 5, 4, 3, 2]
+print(max(numbers))   %\Output{5}%
+print(min(numbers))   %\Output{1}%
+\end{lstlisting}
+
+\subsubsection{len}
+len函数用于返回一个对象（如字符串、列表、元组等）的长度或个数。例如：
+\begin{lstlisting}
+my_list = [1, 2, 3, 4, 5]
+print(len(my_list))   %\Output{5}%
+
+my_string = "Hello, World!"
+print(len(my_string))   %\Output{13}%
+\end{lstlisting}
+
+\subsubsection{range}
+range函数用于生成一个整数序列，它可以为我们生成一个生成器（类似于列表，但比列表的性能更好）。使用range函数，我们可以快速生成一个从某数开始，按照一定规律排列到某数结束的一个生成器。如下例：
+\begin{lstlisting}
+for i in range(10):
+    print(i)
+
+print("================================================")
+
+for i in range(10, 0, -1):
+    print(i)
+\end{lstlisting}
+输出结果为：
+\begin{lstlisting}
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+================================================
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+\end{lstlisting}
+
+上述第二个例子中的10就是起始数字，0则为截止数字，-1就是步长。range会从10开始，依次加上-1，即减去1，直到运算结果为0时停止。（请注意，截止数字不会包含在range所生成的生成器中）
+
+\subsubsection{type、isinstance}
+type函数用于返回一个对象的类型，而isinstance函数用于检查一个对象是否是某个特定类型的实例。例如：
+\begin{lstlisting}
+x = 10
+print(type(x))   %\Output{<class 'int'>}%
+print(isinstance(x, int))   %\Output{True}%
+print(isinstance(x, str))   %\Output{False}%
+\end{lstlisting}
+
+\subsubsection{int、float、str、bool}
+int、float、str与bool都是Python内置的数据类型转换函数。int用于将一个字符串、浮点数转换为整数，float用于将一个字符串、整数转换为浮点数，str用于将一个对象转换为字符串，而bool用于将一个对象转换为布尔值。例如：
+\begin{lstlisting}
+print(int("123"))   %\Output{123}%
+print(float("3.14"))   %\Output{3.14}%
+print(str(123))   %\Output{'123'}%
+print(bool(0))   %\Output{False}%
+print(int("123") + 1)   %\Output{124}%
+\end{lstlisting}
+
+\subsection{Python第一方库}
+Python的第一方库是由Python官方维护和提供的库，包含了许多实用的功能模块，如math、datetime、os、sys等。接下来我们将介绍一些常用的第一方库及其功能。通过import语句，我们可以导入这些库并使用其中的函数和类来实现各种功能。
+\subsubsection{math库}
+math库提供了许多数学函数和常量，如sin、cos、tan、pi等。例如：
+\begin{lstlisting}
+import math
+print(math.sin(math.pi / 2))   %\Output{1.0}%
+print(math.cos(0))   %\Output{1.0}%
+print(math.tan(math.pi / 4))   %\Output{1.0}
+\end{lstlisting}
+
+\subsubsection{os库}
+os库提供了许多与操作系统交互的功能，如获取当前工作目录、列出目录内容等。例如：
+\begin{lstlisting}
+import os
+print(os.getcwd())   %\Output{当前工作目录路径}%
+print(os.listdir())   %\Output{当前目录下的文件和文件夹列表}%
+\end{lstlisting}
+
+同时也包括对文件的一些操作，如删除文件、重命名文件等。例如：
 
 \begin{lstlisting}
-define demo = True
-define isActTwo = False
+import os
+os.remove("example.txt")   # 删除名为example.txt的文件
+os.rename("old_name.txt", "new_name.txt") # 重命名old\_name.txt为new\_name.txt
 \end{lstlisting}
 
-这段代码的运行效果等于：
-\begin{lstlisting}
-init python:
-    demo = True
-    isActTwo = False
-\end{lstlisting}
+\begin{Attention}
+    您应该慎用os库中对于文件的删除、操作等功能。
+\end{Attention}
 
-\begin{ExtraKnowledge}
-    在define语句中同样可以指定优先级，只需要在define关键词后添加优先级即可，如：\verb|define 3 demo = True|。
-\end{ExtraKnowledge}
+对于具体的os库使用方法，请查看Python官方文档。
 
-define还可以为我们创建一个储存区，只需要将define关键词后的变量改为“储存区.变量”的形式即可。
+\subsection{安装第三方库}
+对于一些Python官方没有实现的功能，我们可以使用第三方库。Python提供了pip工具来安装第三方库。pip是Python的包管理工具，可以轻松地安装和管理Python包。
 
-\subsection{default语句}
-default语句会给一个未被定义的变量初始赋值。default语句适合用来定义在游戏过程中会变化的变量。如下例：
-\begin{lstlisting}[numbers=none]
-default demo = False
-\end{lstlisting}
+在Anaconda Command Prompt中，输入以下命令来安装一个名为\verb|requests|的第三方库：
+\begin{verbatim}
+    pip install requests
+\end{verbatim}
 
-当demo这个变量在游戏开始后没有被定义，则将等价于在start脚本标签中定义demo，且值为False。若在存档加载后没有被定义，则等价于在after\_load魔法标签中定义demo，且值为False。总而言之，若demo这个变量在游戏开始时没有被定义，那么它的值就是False，除非在后来的代码中它的值被改变了。
+等待安装完成后，您就可以在Python中使用\verb|requests|库了。例如，在Python交互式环境中输入以下代码来测试是否安装成功：
+\begin{verbatim}
+>>> import requests
+\end{verbatim}
 
-\subsection{持久化数据}
+\subsection{在Ren'Py中使用Python第三方库}
 
-持久化数据是Ren'Py中的一个储存区，无论用户怎样存档、读档，持久化数据区的数据总是独立于Ren'Py的游戏存档数据的。如DDLC中，对于用户是否在一周目走过了每一条支线、解锁了每一个CG的字典（dict），就存储在持久化数据中，避免因读档存档导致数据消失。简单来说，持久化数据就是不会随着用户存档、读档而改变的数据。
+Ren'Py中，内置了一些Python第一方库，例如：string、math、datetime等。对于Python第三方库，Ren'Py也提供了支持，需要注意的是，Ren'Py使用第三方库的方法与Python有一定的区别。
 
-一般来说，在使用DDLC中文Mod模板制作且没有对模板进行设置的游戏，在Ren'Py标准位置里会有一个名为DDLCModTemplateZh的文件夹，里面通常有一个名为persistent的文件，那就是存储持久化数据的存档文件。
+Ren'Py中安装Python第三方库同样是使用pip工具安装，但是需要在游戏环境下安装。
 
-持久化数据的用法就和普通变量一样，只不过在前面需要加上“persistent.”前缀。简单来说，持久化数据的语法如下：
+首先，打开Anaconda Command Prompt，对于Ren'Py 7用户，您还需要激活renpy7环境。然后，在Ren'Py SDK中选中项目，在右侧选项中选择game，此时Ren'Py SDK会打开游戏根目录。
 
-\begin{lstlisting}
-persistent.<变量名> = <Python 数据类型>
-\end{lstlisting}
+点击地址栏，全选复制当前目录，然后在Anaconda Command Prompt中输入以下命令：
+\begin{verbatim}
+    cd "复制的目录"
+    pip install --target "game/python-packages" 第三方库名称
+\end{verbatim}
 
-例如：
-\begin{lstlisting}
-default persistent.monika_deleted = False
-\end{lstlisting}
+对于项目与Ren'Py SDK不在同一分区的Windows用户，还需要先切换到项目所在分区，例如：\verb|D:|，然后再执行上述命令。
 
-无论用户如何重启游戏、读档、存档，除非在代码中对持久化数据进行修改或删除persistent文件，persistent.monika\_deleted的值永远都只会是False。
+例如，如果您的项目根目录为\verb|D:\Projects\AAA|，想安装requests库，可以输入以下命令：
+\begin{verbatim}
+    D:\
+    cd "D:\Projects\AAA"
+    pip install --target "game/python-packages" requests
+\end{verbatim}
+
+安装完成后，现在可以在Ren'Py中使用该第三方库了。在Ren'Py中，您需要在Python代码块中使用import导入库。
+
 \end{document}

@@ -1,72 +1,70 @@
 \documentclass[../../Main.tex]{subfiles}
 \begin{document}
-\section{等效语句}
-等效语句是在Python中使用Ren'Py语法的一种方式。等效语句只能在Python代码中运行。
+\section{使用变量}
+\subsection{变量的命名}
+在Python中，变量命名必须遵循以下规则：
+\begin{itemize}
+    \item 变量名只能包含字母、数字和下划线（\_）；
+    \item 变量名不能以数字开头；
+    \item 变量名不能是Python的关键词（如：def、class、return等）；
+    \item 变量名区分大小写（如：var与Var是两个不同的变量）。
+\end{itemize}
 
-\subsection{对话}
-Ren'Py的say语句对应两种等效语句。如下例：
+为了提高代码的可读性，避免出现混淆，以下为建议遵守的变量命名规则：
+\begin{itemize}
+    \item 变量名应具有描述性，能够反映变量的用途或内容。例如，使用player\_score而不是ps；
+    \item 对于实例、函数名等，使用下划线命名法，即使用下划线（\_）分隔单词，以提高可读性。例如，使用total\_count而不是 totalcount；
+    \item 避免使用过于简短或模糊的变量名，如a、b、data等，除非在非常短的代码段中使用；
+    \item 对于类、错误对象，建议使用大驼峰命名法（每个单词的首字母大写且不使用下划线），如MyClass、CustomError而非my\_class、custom\_error。
+\end{itemize}
 
-\begin{lstlisting}
-m "你好！"
-\end{lstlisting}
-
-这段代码不仅等效于下列代码：
-
-\begin{lstlisting}
-$ m("你好！")
-\end{lstlisting}
-
-同时也等效于：
-
-\begin{lstlisting}
-$ renpy.say(m, "你好")
-\end{lstlisting}
-
-不过，为了保持语义上的通畅，我们常使用后者。
-
-\subsection{图像显示}
-
-\subsubsection{show}
-
-show语句的等效语句的语法如下：
+\subsection{python语句块}
+关于如何在Python语句块中定义变量，请阅读第\ref{sec:4.3}章
+\subsection{define语句}
+define语句在初始化时将一个变量赋值。此变量视为一个常量，初始化之后不应再改变。例如：
 
 \begin{lstlisting}
-renpy.show(<name>, at_list=<position>, zorder=<zorder number>)
+define demo = True
+define isActTwo = False
 \end{lstlisting}
 
-\subsubsection{hide}
+这段代码的运行效果等于：
+\begin{lstlisting}
+init python:
+    demo = True
+    isActTwo = False
+\end{lstlisting}
 
-hide语句的等效语句的语法如下：
+\begin{ExtraKnowledge}
+    在define语句中同样可以指定优先级，只需要在define关键词后添加优先级即可，如：\verb|define 3 demo = True|。
+\end{ExtraKnowledge}
+
+define还可以为我们创建一个储存区，只需要将define关键词后的变量改为“储存区.变量”的形式即可。
+
+\subsection{default语句}
+default语句会给一个未被定义的变量初始赋值。default语句适合用来定义在游戏过程中会变化的变量。如下例：
+\begin{lstlisting}[numbers=none]
+default demo = False
+\end{lstlisting}
+
+当demo这个变量在游戏开始后没有被定义，则将等价于在start脚本标签中定义demo，且值为False。若在存档加载后没有被定义，则等价于在after\_load魔法标签中定义demo，且值为False。总而言之，若demo这个变量在游戏开始时没有被定义，那么它的值就是False，除非在后来的代码中它的值被改变了。
+
+\subsection{持久化数据}
+
+持久化数据是Ren'Py中的一个储存区，无论用户怎样存档、读档，持久化数据区的数据总是独立于Ren'Py的游戏存档数据的。如DDLC中，对于用户是否在一周目走过了每一条支线、解锁了每一个CG的字典（dict），就存储在持久化数据中，避免因读档存档导致数据消失。简单来说，持久化数据就是不会随着用户存档、读档而改变的数据。
+
+一般来说，在使用DDLC中文Mod模板制作且没有对模板进行设置的游戏，在Ren'Py标准位置里会有一个名为DDLCModTemplateZh的文件夹，里面通常有一个名为persistent的文件，那就是存储持久化数据的存档文件。
+
+持久化数据的用法就和普通变量一样，只不过在前面需要加上“persistent.”前缀。简单来说，持久化数据的语法如下：
 
 \begin{lstlisting}
-renpy.hide(<name>)
+persistent.<变量名> = <Python 数据类型>
 \end{lstlisting}
 
-\subsubsection{scene}
-
-scene语句的等效语句的语法如下：
-
+例如：
 \begin{lstlisting}
-renpy.scene()
-renpy.show(<name>)
+default persistent.monika_deleted = False
 \end{lstlisting}
 
-\subsubsection{with 从句}
-
-with 语句的等效语句的语法如下：
-
-\begin{lstlisting}
-renpy.with_statement(<name>)
-\end{lstlisting}
-
-\subsection{call 和 jump}
-
-call 和 jump 语句的等效语句的语法如下：
-
-\begin{lstlisting}
-renpy.call(label=<script name>)
-renpy.jump(label=<script name>)
-\end{lstlisting}
-
-对于更多关于等效语句的介绍，请查阅 \url{https://doc.renpy.cn/zh-CN/statement_equivalents.html}
+无论用户如何重启游戏、读档、存档，除非在代码中对持久化数据进行修改或删除persistent文件，persistent.monika\_deleted的值永远都只会是False。
 \end{document}

@@ -15,6 +15,9 @@ bsod.rpy中定义了DDLC二周目中“电脑蓝屏”的特殊效果。代码�
 
 
 \subsection{console.rpy}
+\begin{Attention}
+    这部分的内容仅适用于2.0模板。在Future分支、5.0版本中对于控制台的定义不同，导致调用方法不同，具体请参考Future分支、5.0版本的代码。
+\end{Attention}
 
 这个文件中定义了假结局中莫妮卡删除CG时使用的控制台。其使用方法为：
 \begin{lstlisting}
@@ -32,8 +35,6 @@ call updateconsole(text="print('Hello, World')", history="Hello, World")
 
 运行代码，在游戏的左上角出现了控制台，并输入了\verb|print('Hello, World')|这串代码，执行结果为“Hello, World”。
 
-在Future分支、5.0版本中对于控制台的定义不同，导致调用方法不同，具体请参考Future分支、5.0版本的代码。
-
 \subsection{glitchtext.rpy}
 
 glitchtext.rpy中定义了乱码文字。我们可以通过调用glitchtext函数生成一段乱码文字。其使用方法如下:
@@ -42,7 +43,7 @@ $ <变量名> = glitchtext(<长度>)
 \end{lstlisting}
 
 
-例如我想要生成一串长度为 200 的乱码字符，并把它赋值给一个名为 gtext 的变量，可以用以下的代码:
+例如生成一串长度为 200 的乱码字符，并把它赋值给一个名为 gtext 的变量，可以用以下的代码:
 \begin{lstlisting}
 $ gtext = glitchtext(200)
 \end{lstlisting}

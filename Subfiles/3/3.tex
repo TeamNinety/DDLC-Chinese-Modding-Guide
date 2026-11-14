@@ -1,153 +1,325 @@
 \documentclass[../../Main.tex]{subfiles}
 \begin{document}
-\section{在Ren'Py中使用Python语句}
-\label{sec:4.3}
-在Ren'Py中有多种方式可以使用Python语句：Python语句块（block）、单行Python语句、init python语句。
+\section{函数与类\PyOnly }
 
-\subsection{Python语句块}
-Python语句块是使用Python的最方便的一种形式。一个Python语句块包含两个部分：
-\begin{itemize}
-    \item 开头的声明
-    \item Python代码
-\end{itemize}
+\subsection{函数}
+在编程中，我们往往会重复执行一段代码或进行类似的操作。为了减少代码的重复，我们可以使用函数（Function）。类似于数学上的函数，函数定义好怎么执行，将相对独立的功能抽象出来，成为一个独立的个体，方便在后续的代码中复用。
+
+\subsubsection{函数的定义}
+定义一个函数，只需要开头为def即可。如下例：
+\begin{lstlisting}
+def test(arg1, arg2):
+    print("Arg1 is: " + arg1)
+    print("Arg2 is: " + arg2)
+    return
+\end{lstlisting}
+
+其中，test为这个函数的名字，arg1、arg2则为这个函数接受的参数。若留空，代表该函数不接受参数。冒号后的部分被称为函数主体，是调用该函数后具体的一些代码。return语句则是函数运行成功后返回的值，可以留空。
+
+调用函数也非常简单，如下例：
+\begin{lstlisting}
+test(1, 2)
+%\Output{Arg1 is: 1}%
+%\Output{Arg2 is: 2}%
+
+test(5, arg2=1)
+%\Output{Arg1 is: 5}%
+%\Output{Arg2 is: 1}%
+
+test(arg2=4, arg1=2)
+%\Output{Arg1 is: 2}%
+%\Output{Arg2 is: 4}%
+
+test(arg1=7, arg2=-7)
+%\Output{Arg1 is: 7}%
+%\Output{Arg2 is: -7}%
+\end{lstlisting}
+
+由此可见，在给函数传递参数时，可以按照参数的位置直接传递，也可以使用“参数名=参数”的方式传递。
+
+\subsubsection{函数命名空间}
+命名空间（Namespace），可以理解成为代码运行的一个环境。Python中命名空间可分为全局命名空间（Global Namespace）与局部命名空间。全局命名空间是所有代码都可以访问的，所有代码共有的，而局部命名空间是一个函数或类独有的、不与其他代码共享的空间。
+
+在这个空间里，函数内部的变量与函数外界的变量不相等。在函数内部调用变量时，会优先去寻找函数的命名空间，再去寻找外部的环境查找变量。因此，函数外的代码无法读取或修改函数命名空间内的变量，函数内也无法直接修改全局命名空间的变量。
+
+如下例：
+\begin{lstlisting}
+>>> a = 1
+>>> def test():
+...     a = 2
+...     print(a)
+>>> print(a)
+%\Output{1}%
+>>> test()
+%\Output{2}%
+>>> print(a)
+%\Output{1}%
+\end{lstlisting}
+
+运行上述代码，我们发现虽然一开始我们将a这个变量赋值为1，在函数中，我们将a“修改”（实际上是在函数内部的命名空间内重新定义了a）为了2，并且在函数内部可以看到a的值确实为2，但当我们在函数外打印函数值，会发现值依然是1，这便是函数命名空间发挥的作用。它将函数内部的变量与外部变量分隔开来，避免因为函数污染外部环境，同时也确保了函数的相对独立性——不依赖于外部环境。
+
+如果要在函数内修改外部变量，则应使用global语句声明要使用的变量，如下例：
+\begin{lstlisting}
+>>> a = 1
+>>> def test():
+...     global a
+...     a = 2
+...     print(a)
+
+
+>>> print(a)
+%\Output{1}%
+>>> test()
+%\Output{2}%
+>>> print(a)
+%\Output{2}%
+\end{lstlisting}
+
+运行上述代码，与第一个例子不同在于，global语句在函数内部命名空间内“创建”了一个a变量，并将其指向全局空间中的a变量。最后输出值是2，说明在函数内部我们是真真正正的对外部变量a进行了修改，并且修改成功。
+
+在编程中，还有一种情况是函数内部还有一个函数，把外部函数里某一段只用一次的复杂逻辑拆分出来，不外露给全局，我们称之为嵌套函数（或函数的内定义）。如下例子：
+\begin{lstlisting}
+def func1():
+    x = 1
+    print(x)
+    def func2():
+        print(x)
+
+    def func3():
+        x = 2
+        print(x)
+    func2()
+    func3()
+    print(x)
+\end{lstlisting}
+
+在这个例子中，func1被称为父函数，在内部定义了func2、func3，func2、func3就被称为嵌套函数。嵌套函数符合函数的特性，拥有一个独立的、不与其他代码共享的运行空间。但是，嵌套函数也能访问父函数内的变量而不需声明。因此，这段代码的运行结果如下：
+\begin{lstlisting}
+>>> func1()
+%\Output{1}%
+%\Output{1}%
+%\Output{2}%
+%\Output{1}%
+\end{lstlisting}
+
+但请注意，嵌套函数有一种特殊情况无法访问范围外变量。当嵌套函数内的代码存在一个同名变量或者在后面的代码中对这个变量进行了修改，那么Python会认为代码企图在变量定义之前访问，会抛出UnboundLocalError错误。具体例子如下：
+\begin{lstlisting}
+def func1():
+    x = 0
+    def func2():
+        print(x)
+        x = 1
+        print(x)
+    print(x)
+\end{lstlisting}
+
+我们预期中的运行结果应该输出0 1 0。但事实上，这段代码会抛出UnboundLocalError错误。原因就是在func2中，我们定义了一个与func1中的x变量同名的变量，当Python运行到第4行时，由于第5行对变量x进行了定义，它会认为我们想要访问的应该是func2中的变量x而不是func1中的变量x，而func2中的变量x是在第5行才被定义，故Python会抛出错误，告诉我们我们企图在变量x定义之前访问x这个变量。
+
+类似与global语句，我们同样可以在嵌套函数内修改父函数中的变量。nonlocal语句和global语句的用法一致，但是语义不同。如下例：
+\begin{lstlisting}
+x = 0
+y = 3
+print(x)
+def func1():
+    global x 
+    x = 1
+    print(x)
+    y = 0
+    def func2():
+        nonlocal y
+        y = 2
+        print(y)
+    func2()
+    print(y)
+
+func1()
+print(x)
+print(y)
+\end{lstlisting}
+
+这段代码的运行结果如下：
+\begin{lstlisting}
+%\Output{0}%
+%\Output{1}%
+%\Output{2}%
+%\Output{2}%
+%\Output{1}%
+%\Output{3}%
+\end{lstlisting}
+
+上述代码中，我们在全局范围内定义了x、y两个变量并分别赋值为0、3。
+
+在func1中，我们使用global语句声明了func1函数内部的x变量就指向外部变量x，并修改为了1，并在func1中定义了内部变量y。
+
+随后，我们运行到了func2函数中。在func2函数中，我们通过nonlocal语句声明了func2中的变量y指向的是内部变量y（注意不是外部变量y）并修改值为2。在func1中打印变量y，也会发现值为2，说明func2函数中的y确实指向了func1函数中的y。最后在外部打印x、y变量，发现x被修改为1，而y依然为3，说明func1中x确实是外部变量x，func1、func2中的变量y与外部变量y不相同。
+
+\subsection{类}
+Python是一门面向对象的语言，在Python中我们所能看到的东西几乎都是类（Class）所生成的对象。
+
+类是一种描述具有相同属性和方法（函数）的对象的集合，定义了一件事物的抽象特点。类的定义包含了数据的形式（属性）以及对数据的操作（方法）。它定义了该集合中每个对象共同具有的方法与属性。
+
+对象是类的实例，是具体的。实例化是指用类创建对象的过程。简单来说，类就是一个模板，存放着一堆特殊的函数与属性，而实例化就是用这个模板照葫芦画瓢生成一个对象的过程。对象具有唯一性，每一个实例化结果的对象都是不同的。
+
+类中的函数分为三种：类函数、方法函数、静态函数。静态函数与普通函数并无差异，而类函数与方法函数属于绑定函数，它们和类与对象息息相关。在目前阶段，我们并不需要去了解每种函数的定义以及作用，我们只需要明白类中存放着这三种函数即可。
+
+让我们用一个简单的例子理解类与对象之间的关系：
+
+“学生”是一个类：它描述所有学生都有姓名、年龄，也都会自我介绍，姓名、年龄就是类的属性，自我介绍就是类的一个方法。但“学生”只是一个概念，不指向一个具体的人。例如：张三，18 岁；李四，20 岁，张三多少岁不会影响李四多少岁。在这里张三李四是具体的学生，就是“学生”这个类的对象。
+
+类定义一个抽象的概念“有哪些信息、能做什么”，比如学生有姓名、年龄，会自我介绍；对象装着具体的数据，比如张三是 18 岁，李四是 20 岁；先有类，再按类创建对象；一个类可以创建很多对象，每个对象的数据互不影响。
+
+\subsubsection{何时使用类？}
+专业术语来说，类是面向对象的，而函数是面向过程的。
+
+类将多个功能相关的方法进行封装，是多个方法的集合，可以生成多个独一无二的对象，每个对象之间互不相同、对象中的变量也不相同。类可以保存某个属性的状态，同时也可以理解成为一个模板，照着这个模板，我们能生成一个对象。并且类具有修改容易的优点。
+
+那么何时使用类呢？如下例：
+\begin{lstlisting}
+# 定义一个字典，存放每个角色支线故事是否解锁的状态
+unlocked = {'monika': False, 'natsuki': False, 'yuri': False, 'sayori': False}
+
+# 定义跳转到对应角色支线故事的函数
+def jump_to_monika():
+    ...
+def jump_to_natsuki():
+    ...
+def jump_to_sayori():
+    ...
+def jump_to_yuri():
+    ...
+
+# 定义开始支线故事的函数
+def side_story(winner, winner_point):
+    # 声明 unlocked 变量是一个全局变量
+    global unlocked
+
+    # target\_points: 目标分数，如果分数没有达到目标分数则不开启支线故事
+    target_points = 10
+
+    # 判断
+    if winner_point >= target_point:
+        if winner == "monika":
+            jump_to_monika()
+        elif winner == 'natsuki':
+            jump_to_natsuki()
+        elif winner == 'sayori':
+            jump_to_sayori()
+        elif winner == 'yuri':
+            jump_to_yuri()
+
+        # 设置状态
+        unlocked[winner] = True
+
+side_story('monika', 5)
+
+\end{lstlisting}
+
+可以看到，如果用函数来实现，我们需要在外部环境定义许多函数与变量，例如unlocked、jump\_to\_monika等。稍有不当，我们就会污染整个外部环境。并且因为我们无法直接在游戏中对函数内的变量进行修改，所以我们没有办法在游戏运行过程中降低解锁的目标分数。
+如果用类来实现：
+\begin{lstlisting}
+# 定义一个类
+class SideStory:
+
+    # \_\_init\_\_是一个特殊的函数，它用于实例化时告诉Python要怎样生成对象
+    def __init__(self):
+        # 设置 unlocked 变量
+        self.unlocked = {'monika': False, 'natsuki': False, 'yuri': False, 'sayori': False}
+
+        # target\_points: 目标分数，如果分数没有达到目标分数则不开启支线故事
+        self.target_points = 10
+
+    def start(self, winner, winner_point):
+        # 判断
+        if winner_point >= self.target_points:
+            if winner == "monika":
+                ...
+            elif winner == 'natsuki':
+                ...
+            elif winner == 'sayori':
+                ...
+            elif winner == 'yuri':
+                ...
+            
+            self.unlocked[winner] = True
+
+side_story = SideStory()
+side_story.start('monika', 5)
+
+side_story.target_points = 5
+\end{lstlisting}
+
+在这个例子中，SideStory就是我们定义的一个类，它有两个属性：unlocked、target\_points。它有一个方法：start。我们通过SideStory()实例化了一个对象side\_story，并调用了它的start方法。
+
+类与对象避免了在外部环境定义许多函数与变量。所有与一个功能相关的变量、函数都被放在了类的命名空间中，避免了污染外部命名空间。并且类还有一个好处：容易在外部对内部变量进行修改，因此对于一开始无法修改解锁目标分数的问题便得到了解决。
+
+\begin{ExtraKnowledge}
+    self是一个特殊的参数。当类被实例化后，无论调用其中的哪一个方法（静态方法除外），Python都会将这个对象自己传递作为第一个参数。
+\end{ExtraKnowledge}
+
+\subsubsection{类的定义}
+要定义一个类，需以class关键字开头。如下例：
+
+\begin{lstlisting}
+class Test:
+    def __init__(self):
+        self.a = 1
+
+    def counter(self):
+        self.a += 1
+        print(self.a)
+\end{lstlisting}
+
+上述例子中，定义了一个名为Test的类，这个类中有一个属性为a，且有一个counter方法用于打印a的值。
+\begin{ExtraKnowledge}
+    在类中，以双下划线开头的、具有特殊的方法名的方法叫魔法方法（Magic Methods)。上述例子中的\_\_init\_\_特殊方法用于在实例化一个类时会运行的初始化函数。类似的魔法方法还有\_\_eq\_\_，\_\_ne\_\_等。
+\end{ExtraKnowledge}
+
+\subsubsection{类的使用}
+一般来说，在使用类前，需要对类进行实例化。实例化后，类就会变成对象。创造对象和创造变量类似。如下例：
+
+\begin{lstlisting}
+>>> test = Test()
+>>> test.counter()
+%\Output{2}%
+>>> test.counter()
+%\Output{3}%
+\end{lstlisting}
+
+第一行的\verb|test = Test()|创造了一个Test对象。剩下两行代码则是在调用这个对象的counter方法。
+
+在一个变量名前加上\verb|self.|，这个变量就转化为了对象的一个属性，位于类s的命名空间内，否则其依然是函数的变量，位于方法命名空间内，只能被该方法使用。
 
 如下例：
 
 \begin{lstlisting}
-# Chapter 0
-label ch0_start:
-    python:
-        # affection: 好感度
-        n_aff = 0
-        m_aff = 0
-    scene bg club_day
-    "{cps=20}快到{b}学园祭{/b}了。{/cps}{w=.5}{nw}"
-    show monika 1a at l41 zorder 1
-    m "各位！我们得开始准备了！"
-    show sayori 1a at h42 zorder 1
-    s "好耶！！！！"
-    show natsuki 1a at t43 zorder 1
-    n 2d "啊，我都等不及学园祭了。"
-    n "肯定会很棒的！"
-    show yuri 1a at s44 zorder 1
-    y "..."
-    scene bg club_day
-    show monika 2a at t21 zorder 1
-    show sayori 2a at t22 zorder 1
-    m "那么，是时候来进行分工了。"
-    m 4k "[player]，你想要做什么? "
-    menu:
-        "做小蛋糕":
-            s "夏树的小蛋糕最好吃了！"
-            python:
-                n_aff += 1
-                m_aff -= 1
-        "布置教室":
-            m "那我们可得抓紧时间了！"
-            python:
-                m_aff += 1
-                n_aff -= 1
-    return
+class Test:
+    def __init__(self, number):
+        self.num = number
+        b = 20
+        print(self.num)
+        print(b)
 
+    def print_attr(self):
+        print(self.num)
+        print(b)
+
+>>> test = Test(1)
+%\Output{1}%
+%\Output{20}%
+>>> test.print_attr()
+%\Output{1}%
+Traceback (most recent call last):
+    File "<python-input-5>", line 1, in <module>
+        test.print_attr()
+    File "<python-input-2>", line 10, in print_attr
+        print(b)
+NameError: name 'b' is not defined
 \end{lstlisting}
 
-当出现多个Python语句块时，Ren'Py会根据先后顺序依次执行。同时，我们可以使用hide与in关键词来改变Python语句块的行为。
-
-hide关键词会使Python语句块在一个独立的环境（类似于函数命名空间）下运行，即不与其他Python语句块共用一个环境。在具有hide关键词的Python语句块中的所有变量将不会被保存。
-
-in关键词则可以让Python语句块在一个独立的环境下运行。其他环境可以通过“储存区.变量”来使用其他环境的内容。
-
-如下例：
-\begin{lstlisting}
-python:
-    a = 2
-
-python hide:
-    a = 1
-
-python in c:
-    a = 4
-
-python:
-    print(c.a)
-    print(a)
-\end{lstlisting}
-
-最后的运行结果为：4、2。
-
-\subsection{单行Python语句}
-大多数情况下，我们只有一行Python语句需要执行。此时使用Python语句块无疑会对开发者造成多余的输入。为了让编写只有一行的Python更方便快捷，Ren'Py提供了单行Python语句。
-
-单行Python语句以美元符号（\$）开头。如：
-\begin{lstlisting}
-$ s_aff = 0
-
-$ winner = 'monika'
-\end{lstlisting}
-
-\subsection{init python语句}
-init python语句在Ren'Py初始化阶段运行，会早于其他代码。这种功能可以用于定义类和函数或者配置变量。
-\begin{ExtraKnowledge}
-    在init与python之间还可以放一个运行优先级，默认为0。init语句将会按照从低到高的顺序执行。即优先级为-1的代码会优先于优先级为0的代码执行。在优先级相同的情况下，Ren'Py会根据本代码所在文件的Unicode码顺序执行。即在代码优先级都在0的情况下，a.rpy内的代码总会优先于b.rpy内的代码执行。
-\end{ExtraKnowledge}
-
-\begin{Attention}
-    为了避免与Ren'Py自身代码冲突，您只应使用-999到999范围内作为优先级。同时，原则上除特殊代码外，init优先级应全部大于等于0。
-\end{Attention}
-
-init python语句也可以使用hide或in分句，与普通python语句用法相同。
-
-在init python语句中的变量不会被存档。因此，在init语句中定义的应为常量。
-
-\begin{lstlisting}
-# Chapter 0
-init -1 python:
-    demo = True
-
-label ch0_start:
-    python:
-        # affection: 好感度
-        n_aff = 0
-        m_aff = 0
-    scene bg club_day
-    "{cps=20}快到{b}学园祭{/b}了。{/cps}{w=.5}{nw}"
-    show monika 1a at l41 zorder 1
-    m "各位！我们得开始准备了！"
-    show sayori 1a at h42 zorder 1
-    s "好耶！！！！"
-    show natsuki 1a at t43 zorder 1
-    n 2d "啊，我都等不及学园祭了。"
-    n "肯定会很棒的！"
-    show yuri 1a at s44 zorder 1
-    y "..."
-    scene bg club_day
-    show monika 2a at t21 zorder 1
-    show sayori 2a at t22 zorder 1
-    m "那么，是时候来进行分工了。"
-    m 4k "[player]，你想要做什么? "
-
-    if demo:
-        "Demo 版剧情到此结束。"
-        return
-
-    menu:
-        "做小蛋糕":
-            s "夏树的小蛋糕最好吃了！"
-            python:
-                n_aff += 1
-                m_aff -= 1
-        "布置教室":
-            m "那我们可得抓紧时间了！"
-            python:
-                m_aff += 1
-                n_aff -= 1
-    return
-
-\end{lstlisting}
+在本例中，我们在\_\_init\_\_内定义了num与b，在print\_attr方法中，尝试打印num与b。我们发现num可以被打印出来，而b则抛出了NameError错误，说明b是\_\_init\_\_方法中的变量，而num则是test的一个属性。
 
 \begin{ExtraKnowledge}
-    Python语句块还可以使用early分句。在Ren'Py的运行生命周期中，python early是被最早运行的。python early中的代码将会早于所有代码运行，因此，python early语句适合用来修改Ren'Py底层处理机制。但由于修改底层处理代码可能会导致一系列问题，我们不会在这里展开讲解。有兴趣者可以前往 \url{https://doc.renpy.cn/zh-CN/lifecycle.html} 了解python early语句的使用。
+    Python中类与函数的使用远远不止这些，您可以前往 \url{https://www.runoob.com/python3/python3-function.html} 与 \url{https://www.runoob.com/python3/python3-class.html} 了解更多。
 \end{ExtraKnowledge}
-
 
 \end{document}

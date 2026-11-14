@@ -48,7 +48,7 @@ screen say(who, what):
     use quick_menu
 \end{lstlisting}
 
-首先，第1行的“screen say(who, what):”定义了一个名为say的界面，并且该界面在调用时接受两个参数：who与what。screen是最基础也是最重要的一个界面语言语句，用于定义新界面。screen语句接受一个参数，即界面名，同时可以在界面名后用英文括号定义这个界面所接受的参数。转换为代码如下形式：
+首先，第1行的“screen say(who, what):”定义了一个名为say的界面，该界面在调用时接受两个参数：who与what。screen是最基础也是最重要的一个界面语言语句，用于定义新界面。screen语句接受一个参数，即界面名，同时可以在界面名后用英文括号定义这个界面所接受的参数。转换为代码如下形式：
 \begin{lstlisting}
 # 接受参数
 screen <界面名>(<参数1>, <参数2>, ...):
@@ -59,10 +59,6 @@ screen <界面名>:
 \end{lstlisting}
 
 第2行的“style\_prefix "say"”，是screen语句的一个特性，包括特性名称和特性值，特性值是简单表达式。“style\_prefix”是特性名称，“"say"”则是特性值。该语句表示在该界面内的所有组件的样式（style），都以“say”为前缀。例如，第七行的“text”组件，将会默认使用“say\_text”这个样式，除非通过style参数重新指定一个样式。
-
-\begin{ExtraKnowledge}
-    事实上，该组件所用样式应为say\_text，但由于修改组件id特性为“what”，Ren'Py内部使用say\_dialogue替代say\_text。无论如何请记住，style\_prefix效果如它的字面意思一样。
-\end{ExtraKnowledge}
 
 screen语句还可以接受以下特性：
 \begin{center}
@@ -100,7 +96,6 @@ screen语句还可以接受以下特性：
     \item 如果语句后面跟着一个英文冒号，代表该语句是一个语句块（Block）。多个同一等级的语句组成一个语句块。语句块的内容可以是特性列表或界面语言语句。
 \end{itemize}
 
-
 例如，第7行的text组件，将参数what作为text组件的参数，id则是text组件的一个特性，"what"代表着这是这个特性的值。
 
 第1行后的所有组件，都是screen语句下的代码块；第7行的text组件，是在window组件下的语句块，可以理解为text组件被包含在window组件内。
@@ -114,7 +109,7 @@ screen my_first_screen():
 
 \begin{ExtraKnowledge}
     
-    timer 3 action Return() 在界面中定义了一个计时器组件，该组件会在3秒后触发Return()动作，从而关闭当前界面。Return()是Ren'Py界面语言中的一个内置动作，用于关闭当前界面并返回到之前的界面或游戏状态。Return()与timer将会在后续章节中详细介绍。
+    timer 3 action Return() 在界面中定义了一个计时器组件，该组件会在3秒后触发Return()动作关闭当前界面。Return()是Ren'Py界面语言中的一个内置动作，用于关闭当前界面并返回到之前的界面或游戏状态。Return()与timer将会在后续章节中详细介绍。
 \end{ExtraKnowledge}
 
 然后，在menu语句前添加如下代码：
@@ -136,13 +131,6 @@ screen my_first_screen():
 特性可大致分为三类：通用组件特性、特定组件特性与样式特性。
 通用组件特性是所有组件都可以使用的特性。其中有以下几个常用的特性：
 \begin{center}
-    % \tablefirsthead{
-    %     \hline
-    %     \multicolumn{1}{|c}{操作符}
-    %     \multicolumn{1}{|c|}{描述}
-    %     \multicolumn{1}{c|}{示例}
-    %     \hline
-    % }
     \tablehead{
     \hline
     特性 & 描述 & 用法\\
@@ -258,7 +246,9 @@ screen image_screen():
 \subsubsection{控制行为}
 控制行为是指用于管理界面、交互结果和流程控制的行为。
 \paragraph{Call}
-Call行为与renpy.call、call语句相同，会结束当前语句并调用脚本标签。如下例：
+Call行为与renpy.call、call语句相同，会结束当前语句并调用脚本标签。
+
+如下例：
 \begin{lstlisting}
 label my_label(points):
     if points > 10:
@@ -287,7 +277,9 @@ screen my_first_screen():
 NullAction不会执行任何行为。
 
 \paragraph{Return}
-Return行为会使用提供的值返回，当以\verb|call screen|语句调用时，Return行为所返回的值会被保存在\_return变量中。如下例：
+Return行为会将参数返回。
+
+当以\verb|call screen|语句调用时，Return返回值会被保存在\_return变量中。如下例：
 \begin{lstlisting}
 screen my_first_screen():
     frame:
@@ -314,7 +306,9 @@ ToggleScreen则会切换界面可视性，例如\verb|ToggleScreen("a")|，若�
 \subsubsection{菜单行为}
 常用的菜单行为包括：MainMenu、Quit、Start。
 \paragraph{MainMenu}
-MainMenu会触发Ren'Py回到主菜单。其接受两个参数：confirm、save。confirm参数为True时，Ren'Py将会询问用户是否要回到主菜单。save参数为True时，Ren'Py在重启前会进行存档。
+MainMenu会触发Ren'Py回到主菜单。
+
+其接受两个参数：confirm、save。confirm参数为True时，Ren'Py将会询问用户是否要回到主菜单。save参数为True时，Ren'Py在重启前会进行存档。
 
 \paragraph{Quit}
 Quit将会退出游戏。其接受一个confirm参数，同MainMenu相同。
@@ -330,7 +324,9 @@ If是一个判断行为，其接受三个参数：expression、true、false。
 expression是需要判断的表达式，true则是当表达式计算结果为True时的行为，false同理。
 
 \paragraph{Function}
-Function用于在界面语言中调用Python函数（方法）。Function接受4个参数，其中我们主要关注3个：callable、*args、**kwargs。
+Function用于在界面语言中调用Python函数（方法）。
+
+Function接受4个参数，其中我们主要关注3个：callable、*args、**kwargs。
 
 callable参数传递将要调用了Python函数，*args、**kwargs是Python中的一种特殊的参数定义方式，在这里您只需要知道您传递给Function的所有参数都会被传递给Python函数。
 
@@ -362,17 +358,19 @@ style edited is default:
 
 第一行\verb|style edited is default:|定义了一个名为edited的样式，\verb|is default|从句表示继承自default样式。样式名称可以是任意的，但通常会使用具有描述性的名称来表示该样式的用途或特征。
 
-随后的行定义了该样式的属性，包括位置、大小、对齐方式等。每个属性都以属性名称开头，后面跟着属性值。属性值可以是一个简单的值，也可以是一个表达式，甚至是一个列表。
+随后定义了该样式的属性，包括位置、大小、对齐方式等。每个属性都以属性名称开头，后面跟着属性值。属性值可以是一个简单的值，也可以是一个表达式，甚至是一个列表。
 
 \subsection{样式特性}
-样式也有特性常见的特性包括：位置样式特性、文字样式特性、按钮样式特性等。接下来让我们了解一些常见用组件所接受的特性。
+样式也有特性。常见的特性包括：位置样式特性、文字样式特性、按钮样式特性等。接下来让我们了解一些常见用组件所接受的特性。
 
 \subsubsection{位置样式特性}
 
 位置样式特性正如其名，用于定义组件在界面上的位置。几乎所有的可视组件都可以使用位置样式特性。常用的位置属性包括：[x|y]pos、[x|y]align、[x|y]anchor、[x|y]size等。
 
 \paragraph{[x|y]pos}
-[x|y]pos属性用于定义组件在界面上的具体位置。xpos属性定义组件的水平位置，ypos属性定义组件的垂直位置，pos属性使用一个二元元组，第一个元素作为xpos的值，第二个元素作为ypos的值。
+[x|y]pos属性用于定义组件在界面上的具体位置。
+
+xpos属性定义组件的水平位置，ypos属性定义组件的垂直位置，pos属性接受一个二元元组，第一个元素作为xpos的值，第二个元素作为ypos的值。
 
 三个属性都以左上角为坐标原点，x轴以右侧为正方向向右延伸，y轴以下方为正方向向下延伸。
 
@@ -385,7 +383,9 @@ screen my_first_screen():
 xpos的值最大不应超过1280、ypos的值最大不应超过720，否则组件将会超出界面范围而不会被呈现给用户。
 
 \paragraph{[x|y]align}
-[x|y]align属性用于将可视组件显示在界面上的某个相对位置。xalign属性定义组件的水平对齐方式，yalign属性定义组件的垂直对齐方式，align属性使用一个二元元组，第一个元素作为xalign的值，第二个元素作为yalign的值。
+[x|y]align属性用于将可视组件显示在界面上的某个相对位置。
+
+xalign属性定义组件的水平对齐方式，yalign属性定义组件的垂直对齐方式，align属性接受一个二元元组，第一个元素作为xalign的值，第二个元素作为yalign的值。
 
 [x|y]align属性的值范围在0.0到1.0之间，0.0表示左对齐或顶端对齐，0.5表示居中对齐，1.0表示右对齐或底端对齐。当然也可以是0.3、0.8等其他值，表示相对于界面宽度或高度的某个位置。
 
@@ -397,7 +397,9 @@ screen my_first_screen():
 \end{lstlisting}
 
 \paragraph{[x|y]offset}
-[x|y]offset属性用于在组件的基础位置上进行偏移。xoffset属性定义组件在水平方向上的偏移量，yoffset属性定义组件在垂直方向上的偏移量，offset属性使用一个二元元组，第一个元素作为xoffset的值，第二个元素作为yoffset的值。
+[x|y]offset属性用于在组件的基础位置上进行偏移。
+
+xoffset属性定义组件在水平方向上的偏移量，yoffset属性定义组件在垂直方向上的偏移量，offset属性接受一个二元元组，第一个元素作为xoffset的值，第二个元素作为yoffset的值。
 
 [x|y]offset属性的值可以是正数、负数或零，正数表示向右或向下偏移，负数表示向左或向上偏移，零表示不进行偏移。
 
@@ -414,7 +416,11 @@ screen my_first_screen():
 \end{lstlisting}
 
 \paragraph{[x|y][maximum|minimum]}
-[x|y][maximum|minimum]属性用于限制组件在界面上的最大或最小位置。xmaximum属性定义组件在水平方向上的最大位置，ymaximum属性定义组件在垂直方向上的最大位置，maximum属性使用一个二元元组，第一个元素作为xmaximum的值，第二个元素作为ymaximum的值。minimum属性的用法与maximum属性类似，只不过是定义组件在界面上的最小位置。
+[x|y][maximum|minimum]属性用于限制组件在界面上的最大或最小位置。
+
+xmaximum属性定义组件在水平方向上的最大位置，ymaximum属性定义组件在垂直方向上的最大位置，maximum属性使用一个二元元组，第一个元素作为xmaximum的值，第二个元素作为ymaximum的值。
+
+[x|y]minimum属性定义组件在界面上的最小位置，用法与maximum属性相同。
 
 如下例：
 \begin{lstlisting}
@@ -430,12 +436,16 @@ screen my_first_screen():
 此时我们会发现由于第二个文本组件内容太长了，若不换行会导致vbox的大小超过xmaximum属性所定义的最大值，故此时Ren'Py会自动将第二个文本组件换行。去掉maximum属性，看看第二个文本组件是否还会换行。
 
 \paragraph{[x|y|xy]size}
-[x|y|xy]size属性用于定义组件在界面上的大小。xsize属性定义组件的宽度，ysize属性定义组件的高度，xysize属性使用一个二元元组，第一个元素作为xsize的值，第二个元素作为ysize的值。
+[x|y|xy]size属性用于定义组件在界面上的大小。
+
+xsize属性定义组件的宽度，ysize属性定义组件的高度，xysize属性接受一个二元元组，第一个元素作为xsize的值，第二个元素作为ysize的值。
 
 [x|y|xy]size属性的原理是将maximum与minimum属性的值设置为相同的值，从而强制组件的大小固定在该值上。故xysize属性也可以被maximum与minimum属性代替。
 
 \paragraph{[x|y]fill}
-[x|y]fill属性用于定义是否让可视组件在一定方向上填满所有可用空间。若不为True，则可视组件只占用包含所有子组件的空间。
+[x|y]fill属性用于定义是否让可视组件在一定方向上填满所有可用空间。
+
+若不为True，则可视组件只占用包含所有子组件的空间。
 
 如下例：
 \begin{lstlisting}
@@ -451,7 +461,9 @@ screen my_first_screen():
 运行游戏，我们会发现即使文本组件大小并没有达到maximum设定的最大值，但frame组件依旧被填满了。
 
 \paragraph{[x|y]anchor}
-anchor属性用于定义组件锚点相对于可视组件的位置，接受一个0.0到1.0之间的浮点数。锚点是组件的一个参考点，用于确定组件在界面上的位置。xanchor属性定义锚点相对于组件的水平位置，yanchor属性定义锚点相对于组件的垂直位置，anchor属性使用一个二元元组，第一个元素作为xanchor的值，第二个元素作为yanchor的值。
+anchor属性用于定义组件锚点相对于可视组件的位置，接受一个0.0到1.0之间的浮点数。
+
+锚点是组件的一个参考点，用于确定组件在界面上的位置。xanchor属性定义锚点相对于组件的水平位置，yanchor属性定义锚点相对于组件的垂直位置，anchor属性接受一个二元元组，第一个元素作为xanchor的值，第二个元素作为yanchor的值。
 
 例如，我们想在界面的底部渲染一个文本组件而不使用yalign属性，若我们使用以下代码：
 \begin{lstlisting}
@@ -461,22 +473,31 @@ screen my_first_screen():
 
 运行游戏，会发现此时文本组件渲染在了界面之外了。
 
-想象一个方框，这个方框就是文本组件。锚点是在这个方框内的一个点，锚点的位置就代表了这个方框在整个界面上的位置。我们通过\verb|ypos 720| 设置了方框的Y坐标为720，那么我们该如何知道这个Y坐标720是指方框的上边的坐标是720还是指方框的下边的坐标是720呢？这就要看锚点的位置了。锚点默认在组件的左上角位置，那么Y坐标720就指的是方框的上边的坐标是720，因此这个文本组件就会被渲染在界面之外了。
+下面我们通过一个简单的例子理解锚点及其用法：
 
-我们可以通过将yanchor属性设置为1.0来将锚点移动到组件的底部。此时锚点处于文本组件左下角位置，那么这个\verb|ypos 720|此时就代表方框的下边的Y坐标为720，文本组件正确地渲染在屏幕内。
+想象一个方框，这个方框就是文本组件。锚点是在这个方框内的一个点，锚点的位置就代表了这个方框在整个界面上的位置。我们通过\verb|ypos 720| 设置了方框的Y坐标为720，那么我们该如何知道，ypos = 720是指上边框的坐标是720还是指下边框的坐标是720呢？这就要看锚点的位置了。锚点默认在组件的左上角位置，那么Y坐标720就指的是上边框的坐标是720，因此这个文本组件就会被渲染在界面之外了。
+
+我们可以通过将yanchor属性设置为1.0来将锚点移动到组件的底部。此时锚点处于文本组件左下角位置，那么这个\verb|ypos 720|此时就代表下边框的Y坐标为720，文本组件正确地渲染在屏幕内。
 
 
 
 \subsubsection{文本样式特性}
-文本样式特性用于定义文本组件的外观和布局。常用的文本样式特性包括：font、size、color、kerning、line\_spacing等，可以使用文本样式特性的组件包括：text、textbutton等。
+文本样式特性用于定义文本组件的外观和布局。
+
+常用的文本样式特性包括：font、size、color、kerning、line\_spacing等，可以使用文本样式特性的组件包括：text、textbutton等。
 
 \paragraph{color}
-color属性用于定义文本的颜色。它接受一个16进制颜色值。当color属性被设置时，文本将以指定的颜色显示，默认为\#ffffff（白色）。
+color属性用于定义文本的颜色。
+
+它接受一个16进制颜色值。当color属性被设置时，文本将以指定的颜色显示，默认为\#ffffff（白色）。
 
 \paragraph{size}
-size属性用于定义文本的大小。它接受一个整数，表示文本的字体大小。当size属性被设置时，文本将以指定的大小显示，默认为20像素。
+size属性用于定义文本的大小。
+
+它接受一个整数，表示文本的字体大小。当size属性被设置时，文本将以指定的大小显示，默认为20像素。
 
 \paragraph{underline、strikethrough、bold、italic}
+
 bold属性用于定义文本是否加粗。它所接受的值应是布尔值。当bold属性的值为True时，文本将以加粗的形式显示。
 
 italic属性用于定义文本是否斜体。它所接受的值应是布尔值。当italic属性的值为True时，文本将以斜体的形式显示。
@@ -486,10 +507,14 @@ underline属性用于添加下划线效果。它所接受的值应是布尔值�
 strikethrough属性用于添加删除线效果。它所接受的值应是布尔值。当strikethrough属性的值为True时，文本将带有删除线效果。
 
 \paragraph{kerning}
-kerning属性用于定义相邻字符之间的间距。它接受一个数字，表示字符之间的额外空间。当kerning属性被设置时，文本中的字符之间将根据指定的间距插入空白像素。
+kerning属性用于定义相邻字符之间的间距。
+
+它接受一个数字，表示字符之间的额外空间。当kerning属性被设置时，文本中的字符之间将根据指定的间距插入空白像素。
 
 \paragraph{outlines}
-outlines属性用于定义文本的轮廓效果。它接受一个列表，每个元素都是一个包含四个值的元组，分别表示字体轮廓线尺寸、颜色、水平偏移和垂直偏移。当outlines属性被设置时，文本将具有指定的轮廓效果，使其在视觉上更加突出。
+outlines属性用于定义文本的轮廓效果。
+
+它接受一个列表，每个元素都是一个包含四个值的元组，分别表示字体轮廓线尺寸、颜色、水平偏移和垂直偏移。当outlines属性被设置时，文本将具有指定的轮廓效果，使其在视觉上更加突出。
 
 如下例：
 
@@ -499,7 +524,9 @@ screen my_first_screen():
 \end{lstlisting}
 
 \paragraph{font}
-font属性用于指定渲染文本所用字体。其接受一个指向字体文件路径的字符串。
+font属性用于指定渲染文本所用字体。
+
+其接受一个指向字体文件路径的字符串。
 
 如下例：
 \begin{lstlisting}
@@ -508,10 +535,14 @@ screen my_first_screen():
 \end{lstlisting}
 
 \subsubsection{窗口样式特性}
-窗口特性用于指定窗口、框架、按钮的外观。常用的窗口样式特性包括：background、border、padding、margin等，可以使用窗口样式特性的组件包括：window、frame、textbutton等。
+窗口特性用于指定窗口、框架、按钮的外观。
+
+常用的窗口样式特性包括：background、border、padding、margin等，可以使用窗口样式特性的组件包括：window、frame、textbutton等。
 
 \paragraph{background}
-background属性用于定义组件的背景。它接受一个颜色值或图像文件路径。当background属性被设置时，组件将以指定的颜色或图像作为背景显示。
+background属性用于定义组件的背景。
+
+它接受一个颜色值或图像文件路径。当background属性被设置时，组件将以指定的颜色或图像作为背景显示。
 如下例：
 \begin{lstlisting}
 screen my_first_screen():
@@ -522,7 +553,9 @@ screen my_first_screen():
 \end{lstlisting}
 
 \paragraph{[left|right|top|bottom]\_margin、[x|y]margin}
-margin属性用于定义组件的在各个方向的透明空间量。left\_margin、right\_margin、top\_margin、bottom\_margin属性分别定义组件在左、右、上、下方向的透明空间量，xmargin属性等同于将left\_margin与right\_margin属性的值设置为相同的值，ymargin属性等同于将top\_margin与bottom\_margin属性的值设置为相同的值。
+margin属性用于定义组件的在各个方向的透明空间大小。
+
+left\_margin、right\_margin、top\_margin、bottom\_margin属性分别定义组件在左、右、上、下方向的透明空间大小，xmargin属性等同于将left\_margin与right\_margin属性的值设置为相同的值，ymargin属性等同于将top\_margin与bottom\_margin属性的值设置为相同的值。
 
 margin属性接受一个二元元组或四元元组。若为二元元组，第一个元素作为xmargin的值，第二个元素作为ymargin的值；若为四元元组，分别作为left\_margin、top\_margin、right\_margin、bottom\_margin属性的值。
 
@@ -537,7 +570,9 @@ screen my_first_screen():
 \end{lstlisting}
 
 \paragraph{[left|right|top|bottom]\_padding、[x|y]padding}
-padding属性用于定义组件在各个方向上的内边距，即各个组件与窗口内容之间的距离。left\_padding、right\_padding、top\_padding、bottom\_padding属性分别定义组件在左、右、上、下方向上的内边距，xpadding属性等同于将left\_padding与right\_padding属性的值设置为相同的值，ypadding属性等同于将top\_padding与bottom\_padding属性的值设置为相同的值。
+padding属性用于定义组件在各个方向上的内边距，即各个组件与窗口内容之间的距离。
+
+left\_padding、right\_padding、top\_padding、bottom\_padding属性分别定义组件在左、右、上、下方向上的内边距，xpadding属性等同于将left\_padding与right\_padding属性的值设置为相同的值，ypadding属性等同于将top\_padding与bottom\_padding属性的值设置为相同的值。
 
 padding属性接受一个二元元组或四元元组。若为二元元组，第一个元素作为xpadding的值，第二个元素作为ypadding的值；若为四元元组，分别作为left\_padding、top\_padding、right\_padding、bottom\_padding属性的值。
 
@@ -554,14 +589,22 @@ screen my_first_screen():
 运行游戏，我们发现在文本组件不再与窗口边缘直接接触了，而是有了20像素的空白距离。
 
 \subsubsection{网格样式特性}
-网格样式特性用于定义grid组件的布局。其只有三个特性：spacing、xspacing、yspacing。spacing属性定义各单元格之间的距离，单位为像素。xspacing属性定义单元格之间的水平距离，yspacing属性定义单元格之间的垂直距离。xspacing与yspacing属性可以通过spacing属性来简化，如\verb|spacing 10|等同于\verb|xspacing 10 yspacing 10|。
+网格样式特性用于定义grid组件的布局。
+
+网格样式特性只有三个特性：spacing、xspacing、yspacing。
+
+spacing属性定义各单元格之间的距离，单位为像素。xspacing属性定义单元格之间的水平距离，yspacing属性定义单元格之间的垂直距离。xspacing与yspacing属性可以通过spacing属性来简化，如\verb|spacing 10|等同于\verb|xspacing 10 yspacing 10|。
 \subsubsection{方框样式特性}
 方框样式特性用于定义vbox、hbox的布局。常用的特性包括：spacing、box\_reverse等。
 \paragraph{spacing}
-spacing属性用于定义组件在方框中的间距。它接受一个数字，表示组件之间的像素距离。
+spacing属性用于定义组件在方框中的间距。
+
+它接受一个数字，表示组件之间的像素距离。
 
 \paragraph{box\_reverse}
-box\_reverse属性用于定义组件在方框中的排列顺序。它接受一个布尔值，当值为True时，组件将以相反的顺序排列。
+box\_reverse属性用于定义组件在方框中的排列顺序。
+
+它接受一个布尔值，当值为True时，组件将以相反的顺序排列。
 
 对于更多的样式特性，您可以前往\url{https://doc.renpy.cn/zh-CN/style_properties.html}获取更多信息。
 
@@ -642,7 +685,9 @@ transform my_transform:
 transform同样具有特性，并且特性种类繁多，可分为：坐标特性、旋转特性、翻转缩放特性、裁剪与尺寸特性等。
 
 \paragraph{坐标特性}
-常用的坐标特性包括：[x|y]pos、[x|y]align、[x|y]anchor、[x|y]size、[x|y]offset等。其用法均与位置样式特性中的用法相同，故此处不再重复介绍。
+常用的坐标特性包括：[x|y]pos、[x|y]align、[x|y]anchor、[x|y]size、[x|y]offset等。
+
+其用法均与位置样式特性中的用法相同，故此处不再重复介绍。
 
 \paragraph{旋转特性}
 旋转特性正如其名，用于定义可视组件的旋转效果。主要特性是rotate、rotate\_pad。

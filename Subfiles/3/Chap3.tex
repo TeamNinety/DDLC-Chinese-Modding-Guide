@@ -4,31 +4,32 @@
 \chapter{Python与Ren'Py}
 \begin{ChapterGoals}
     \begin{itemize}
+        \item 在本地环境设置Python环境；
         \item 了解Python的基本数据类型；
         \item 学会使用函数与类；
+        \item 了解一些常见常用的Python内置函数；
+        \item 了解一些常见常用的Python第一方库；
         \item 学会在Ren'Py代码中嵌入Python代码；
         \item 学会使用变量；
         \item 学会进行判断控制；
         \item 学会使用等效语句；
+        \item 在Ren'Py中安装并使用第三方库。
     \end{itemize}
 \end{ChapterGoals}
 
-Ren'Py与Python是一个不可分割的整体，在Ren'Py中，许多复杂的操作都需要依靠Python来完成。本章我们将会初步学习如何在Ren'Py中使用Python语句。
+Ren'Py与Python是一个不可分割的整体，在Ren'Py中，许多复杂的操作都需要依靠Python来完成。而Python内置了许多函数和库，这些函数和库可以帮助我们更高效地编写代码。同时，对于一些Python没有实现的功能，我们也可以通过安装第三方库来实现。在本章中，我们将初步了解Python，学习如何在Ren'Py中使用Python语句，介绍一些常见常用的Python内置函数和第一方库，并学习如何在本地设置Python环境并安装第三方库，以及在Ren'Py中使用第三方库。
 
 \begin{Attention}
-    本章只会浅显的介绍Python的用法，若要真正的学习Python，您可以前往 \url{https://www.runoob.com/python3/python3-tutorial.html} 进行更深入的学习。切记，本书不以Python为主。
+    本章只会浅显的介绍Python的用法，若要真正的学习Python，您可以前往 \url{https://www.runoob.com/python3/python3-tutorial.html} 进行更深入的学习。切记，本书不以Python为主，不应被视为Python的学习资料。
 \end{Attention}
 
 \begin{Warning}
-    
-    如果您只是想要简单开发一个Mod，不需要做什么复杂的处理，如只是扩展一下原作剧情，或是给玩家讲述另一个故事，那么您大概率可以跳过本章关于函数、类的学习。但如果您需要开发更复杂的Mod，比如与DDLC有关的AVG游戏，或是像Monika After Story一样的Mod，那么函数与类无疑会方便您后期的开发。
+    如果您只是想要简单开发一个Mod，不需要做什么复杂的处理（如只是扩展原作剧情或是给玩家讲述另一个故事），那么您大概率可以跳过本章关于函数、类的学习。但如果您需要开发更复杂的Mod，比如与DDLC有关的AVG Mod，或是像Monika After Story一样的Mod，那么函数与类无疑会方便您后期的开发。
 
-    但是在学习前，您需要注意一些问题。学习Python的难度也比Ren'Py要大许多。而且在Ren'Py中使用Python代码还要格外小心。如在Python中，有几种数据类型需要格外注意。这些数据类型轻则导致代码出现意料之外的运行结果，重则使Ren'Py不稳定崩溃。
+    但是在学习前，您需要注意一些问题。学习Python的难度比Ren'Py要大许多。在Ren'Py中使用Python代码要格外小心。在Python中，一些代码、错误的数据类型还可能导致代码出现意料之外的运行结果，使Ren'Py不稳定崩溃。
 
-    最后，虽然很多Ren'Py语句都有等效的Python代码，但对于Mod来说，不应该使用Python代替Ren'Py代码。Python的作用是方便开发者进行更复杂的操作而不用修改Ren'Py的底层逻辑。但对于大部分的Mod来说，完全可以使用纯Ren'Py代码。更不用说Python代码在一定程度上会增加脚本的复杂度。Python学好了，用好了，就是锦上添花；如果用不好，就会造成开发难度直线上升，Debug及其困难，还会使游戏崩溃给玩家带来负面体验。
+    最后，很多Ren'Py语句都有等效的Python代码，但对于Mod来说，不应该使用Python代替Ren'Py代码。Python的作用是方便开发者进行更复杂的操作而不用修改Ren'Py的底层逻辑。但对于大部分的Mod来说，完全可以使用纯Ren'Py代码，更不用说Python代码在一定程度上会增加脚本的复杂度。Python学好了，用好了，就是锦上添花；如果用不好，就会造成开发难度直线上升，Debug及其困难，还会使游戏崩溃，给玩家带来负面体验。
 \end{Warning}
-
-对于如何安装Python环境，请参考\ref{sec:10.1}的内容。
 
 \subfile{1.tex}
 \subfile{2.tex}
@@ -36,4 +37,6 @@ Ren'Py与Python是一个不可分割的整体，在Ren'Py中，许多复杂的�
 \subfile{4.tex}
 \subfile{5.tex}
 \subfile{6.tex}
+\subfile{7.tex}
+\subfile{8.tex}
 \end{document}

@@ -1,6 +1,7 @@
 \documentclass[../../Main.tex]{subfiles}
 \begin{document}
 \chapter{更新Ren'Py}
+\label{chap:7}
 
 \begin{ChapterGoals}
     \begin{itemize}
@@ -9,7 +10,7 @@
     \end{itemize}
 \end{ChapterGoals}
 
-首先，恭喜您完成了基础篇的学习，来到了进阶篇。在进入正文以前，我们不得不提醒您需要有一定的Python基础才能完成进阶篇的学习。仅靠本书浅显的介绍是远远不够的，因此，我们建议您在进行一段时间的模组开发和Python学习后再来阅读本部分。
+首先，恭喜您完成了基础篇的学习，来到了进阶篇。在进入正文以前，我们不得不提醒您，进阶篇的学习需要有一定的Python基础，仅靠本书浅显的介绍是远远不够的。因此，我们建议您在进行一段时间的模组开发和Python学习后再来阅读本部分。
 
 本章我们将会学习如何将您的模板更新的4.0版本或5.0版本以启用更多功能，并使用Ren'Py 8进行进一步的开发。
 
@@ -18,7 +19,7 @@
 \end{Attention}
 
 \begin{Warning}
-    请注意，目前DDLC中文模板已经有2年未更新，最新版本的Ren'Py不一定能够完美适配模板。若Ren'Py 8后续版本进行了不兼容的修改，可能会让模板运行错误。因此我们推荐您使用最后一个确定适配的版本——Ren'Py 8.0.3。但最新的Ren'Py 8也带来了一些新特性，为了使用最新版本的Ren'Py 8，我们需要解除兼容性警告。总而言之，本书会向您介绍如何使用最新版本的Ren'Py 8，但本书中的代码只保证能在Ren'Py 8.0.3上正常运行，不保证最新版Ren'Py 8能够成功运行。
+    请注意，目前DDLC中文模板已经有较长时间未更新，最新版本的Ren'Py不一定能够完美适配模板。若Ren'Py 8后续版本进行了不兼容的修改，可能会让模板运行异常。因此我们推荐您使用最后一个确定适配的版本⸺Ren'Py 8.0.3。但最新的Ren'Py 8也带来了一些新特性，为了使用最新版本的Ren'Py 8，我们需要解除兼容性警告。总而言之，本书会向您介绍如何使用最新版本的Ren'Py 8，但本书中的代码只保证能在Ren'Py 8.0.3上正常运行，不保证最新版Ren'Py 8能够成功运行。
 \end{Warning}
 
 \section{判断您是否需要升级}
@@ -54,10 +55,6 @@
 
 在一切开始之前，请先对您现在的项目文件夹进行备份，只需将您的项目文件夹压缩成压缩包或复制一份即可。
 
-\begin{Warning}
-    截止到本章编写时，Ren'Py 7的支持已经结束，故我们建议您直接升级至Ren'Py 8版本，而不是停留在Ren'Py 7。
-\end{Warning}
-
 \subsection{更新Ren'Py}
 更新 Ren'Py 版本是一个相对简单的步骤。首先，前往\url{https://www.renpy.org/latest.html}下载 Ren'Py 8 的最新版本。
 
@@ -66,7 +63,7 @@
 \subsection{更新模板}
 现在，前往\url{https://github.com/DokiMod/DDLCModTemplate-Chinese-future}或者\url{https://github.com/DokiMod/DDLCModTemplate-Chinese-v5}，按照第\ref{2.1.1}节的步骤，下载Future分支或5.0版本并完成配置。
 
-接下来，我们将进入最复杂的一个环节——迁移修改过的代码。
+接下来，我们将进入最复杂的一个环节⸺迁移修改过的代码。
 
 首先，打开VS Code，按照第\ref{2.1.2}节步骤安装Compare Folders插件。随后，使用VS Code打开您项目文件夹所处的文件。例如：我的项目名字叫作“ClubStory”，储存在名为“项目”的文件夹，那么我应该使用VS Code打开“项目”文件夹而非“ClubStory”文件夹。
 
